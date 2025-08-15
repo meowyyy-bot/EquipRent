@@ -1,0 +1,251 @@
+/* CTA Section Styles */
+.cta {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="60" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="40" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.cta-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.cta-content p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta .btn-primary {
+    background: white;
+    color: #2563eb;
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.cta .btn-primary:hover::before {
+    left: 100%;
+}
+
+.cta .btn-primary:hover {
+    background: #f8fafc;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.cta .btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    .cta {
+        padding: 60px 0;
+    }
+    
+    .cta-content {
+        padding: 0 1rem;
+    }
+    
+    .cta-content h2 {
+        font-size: 2rem;
+        margin-bottom: 0.875rem;
+        padding: 0 0.5rem;
+    }
+    
+    .cta-content p {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        padding: 0 0.5rem;
+    }
+    
+    .cta .btn-primary {
+        font-size: 1rem;
+        padding: 0.875rem 1.75rem;
+        width: 100%;
+        max-width: 280px;
+        min-height: 44px;
+    }
+    
+    .cta .btn-primary:hover {
+        transform: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+}
+
+@media (max-width: 480px) {
+    .cta {
+        padding: 50px 0;
+    }
+    
+    .cta-content {
+        padding: 0 0.5rem;
+    }
+    
+    .cta-content h2 {
+        font-size: 1.75rem;
+        padding: 0 0.25rem;
+    }
+    
+    .cta-content p {
+        font-size: 0.95rem;
+        margin-bottom: 1.25rem;
+        padding: 0 0.25rem;
+    }
+    
+    .cta .btn-primary {
+        font-size: 0.95rem;
+        padding: 0.75rem 1.5rem;
+        max-width: 250px;
+        min-height: 40px;
+    }
+}
+
+@media (max-width: 360px) {
+    .cta-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .cta-content p {
+        font-size: 0.9rem;
+    }
+    
+    .cta .btn-primary {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.25rem;
+        max-width: 220px;
+        min-height: 38px;
+    }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .cta-content {
+        padding: 0 2rem;
+    }
+    
+    .cta-content h2 {
+        font-size: 2.25rem;
+    }
+    
+    .cta-content p {
+        font-size: 1.05rem;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (max-width: 768px) {
+    .cta .btn-primary {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .cta .btn-primary:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+}
+
+/* Landscape orientation for mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .cta {
+        padding: 40px 0;
+    }
+    
+    .cta-content h2 {
+        font-size: 1.75rem;
+    }
+    
+    .cta-content p {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .cta::before {
+        background-size: 50px 50px;
+    }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .cta .btn-primary {
+        transition: none;
+    }
+    
+    .cta .btn-primary::before {
+        display: none;
+    }
+    
+    .cta .btn-primary:hover {
+        transform: none;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .cta {
+        background: linear-gradient(135deg, #1e40af, #1e3a8a);
+    }
+    
+    .cta .btn-primary {
+        background: #f8fafc;
+        color: #1e40af;
+    }
+    
+    .cta .btn-primary:hover {
+        background: #e2e8f0;
+    }
+}

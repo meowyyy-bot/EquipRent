@@ -1,0 +1,423 @@
+/* Navigation Styles */
+.navbar {
+    background: #ffffff;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    transition: background 0.3s ease;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+}
+
+.nav-logo h2 {
+    color: #2563eb;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: #2563eb;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #2563eb;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-btn, .cart-btn, .login-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-btn, .cart-btn {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.cart-btn {
+    position: relative;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.login-btn {
+    background: #2563eb;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.login-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.hamburger:hover {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.bar {
+    width: 25px;
+    height: 3px;
+    background: #333;
+    margin: 3px 0;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+
+/* Hamburger animation */
+.hamburger.active .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Mobile navigation improvements */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0 15px;
+    }
+    
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background-color: #ffffff;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s ease-in-out;
+        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.1);
+        padding: 2rem 0;
+        height: calc(100vh - 70px);
+        overflow-y: auto;
+        backdrop-filter: blur(20px);
+    }
+    
+    .nav-menu.active {
+        left: 0;
+    }
+    
+    /* Ensure navbar background consistency when menu is open */
+    .navbar:has(.nav-menu.active) {
+        background: #ffffff !important;
+        backdrop-filter: blur(20px) !important;
+    }
+    
+    .nav-item {
+        margin: 0.5rem 0;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+    }
+    
+    .nav-menu.active .nav-item {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .nav-menu.active .nav-item:nth-child(1) { transition-delay: 0.1s; }
+    .nav-menu.active .nav-item:nth-child(2) { transition-delay: 0.2s; }
+    .nav-menu.active .nav-item:nth-child(3) { transition-delay: 0.3s; }
+    
+    .nav-link {
+        font-size: 1.1rem;
+        padding: 1rem 2rem;
+        display: block;
+        border-radius: 8px;
+        margin: 0 1rem;
+        transition: all 0.3s ease;
+        color: #333;
+    }
+    
+    .nav-link:hover {
+        background: rgba(37, 99, 235, 0.1);
+        color: #2563eb;
+    }
+    
+    .nav-link::after {
+        display: none;
+    }
+    
+    .nav-actions {
+        gap: 0.5rem;
+    }
+    
+    .search-btn, .cart-btn {
+        padding: 0.75rem;
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .login-btn {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+    
+    .hamburger {
+        display: flex;
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    /* Improve mobile menu scrolling */
+    .nav-menu::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .nav-menu::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .nav-menu::-webkit-scrollbar-thumb {
+        background: #2563eb4d;
+        border-radius: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        padding: 0 10px;
+    }
+    
+    .nav-logo h2 {
+        font-size: 1.3rem;
+    }
+    
+    .nav-actions {
+        gap: 0.25rem;
+    }
+    
+    .search-btn, .cart-btn {
+        padding: 0.5rem;
+        min-width: 40px;
+        min-height: 40px;
+    }
+    
+    .login-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        min-height: 40px;
+    }
+    
+    .hamburger {
+        min-width: 40px;
+        min-height: 40px;
+    }
+    
+    .bar {
+        width: 22px;
+        height: 2.5px;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (max-width: 768px) {
+    .nav-link {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        touch-action: manipulation;
+    }
+    
+    .search-btn, .cart-btn, .login-btn, .hamburger {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Prevent text selection on mobile */
+    .nav-link, .search-btn, .cart-btn, .login-btn, .hamburger {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .navbar {
+        background: #1e293b;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .nav-link {
+        color: #f8fafc;
+    }
+    
+    .nav-link:hover {
+        color: #60a5fa;
+        background: rgba(96, 165, 250, 0.1);
+    }
+    
+    .bar {
+        background: #f8fafc;
+    }
+    
+    .nav-menu {
+        background-color: #1e293b;
+    }
+    
+    @media (max-width: 768px) {
+        .nav-link {
+            color: #f8fafc;
+        }
+        
+        .nav-link:hover {
+            color: #60a5fa;
+            background: rgba(96, 165, 250, 0.1);
+        }
+        
+        /* Ensure navbar background consistency when menu is open in dark mode */
+        .navbar:has(.nav-menu.active) {
+            background: #1e293b !important;
+            backdrop-filter: blur(20px) !important;
+        }
+    }
+}
+
+/* User Menu Styles */
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 1rem;
+}
+
+.welcome-text {
+    color: #1e293b;
+    font-weight: 500;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.logout-btn {
+    background: #ef4444;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.logout-btn i {
+    font-size: 0.8rem;
+}
+
+/* Dark mode support for user menu */
+@media (prefers-color-scheme: dark) {
+    .welcome-text {
+        color: #f8fafc;
+    }
+}
+
+/* Mobile responsiveness for user menu */
+@media (max-width: 768px) {
+    .user-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-left: 0;
+        margin-top: 1rem;
+    }
+    
+    .welcome-text {
+        font-size: 0.8rem;
+    }
+    
+    .logout-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}

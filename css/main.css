@@ -1,0 +1,197 @@
+/* Main CSS File - Imports all component styles */
+
+/* Import all CSS files */
+@import url('reset.css');
+@import url('navigation.css');
+@import url('hero.css');
+@import url('categories.css');
+@import url('products.css');
+@import url('cta.css');
+@import url('footer.css');
+@import url('responsive.css');
+@import url('modal.css');
+@import url('about.css');
+
+/* General Button Styles */
+.btn {
+    display: inline-block;
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1.5;
+    position: relative;
+    overflow: hidden;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+}
+
+.btn-secondary:hover {
+    background: #2563eb;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+.btn-outline {
+    background: transparent;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+}
+
+.btn-outline:hover {
+    background: #2563eb;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+}
+
+.btn-outline:active {
+    transform: translateY(0);
+}
+
+/* Mobile button improvements */
+@media (max-width: 768px) {
+    .btn {
+        width: 100%;
+        max-width: 280px;
+        min-height: 44px;
+        font-size: 0.95rem;
+        padding: 0.875rem 1.5rem;
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+    
+    .btn:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        max-width: 250px;
+        min-height: 40px;
+        font-size: 0.9rem;
+        padding: 0.75rem 1.25rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .btn {
+        max-width: 220px;
+        min-height: 38px;
+        font-size: 0.85rem;
+        padding: 0.7rem 1rem;
+    }
+}
+
+/* General mobile improvements */
+@media (max-width: 768px) {
+    /* Improve text readability on mobile */
+    body {
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+    
+    /* Better spacing for mobile */
+    .container {
+        padding: 0 1rem;
+    }
+    
+    /* Improve touch targets */
+    a, button, input, select, textarea {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+    
+    /* Prevent horizontal scrolling */
+    body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    /* Better focus states for accessibility */
+    .btn:focus,
+    .nav-link:focus,
+    .footer-section a:focus {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+    }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .btn {
+        border-width: 1px;
+    }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .btn-secondary {
+        color: #60a5fa;
+        border-color: #60a5fa;
+    }
+    
+    .btn-secondary:hover {
+        background: #60a5fa;
+        color: #1e293b;
+    }
+    
+    .btn-outline {
+        color: #60a5fa;
+        border-color: #60a5fa;
+    }
+    
+    .btn-outline:hover {
+        background: #60a5fa;
+        color: #1e293b;
+    }
+}

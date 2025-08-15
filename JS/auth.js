@@ -1,393 +1,394 @@
-// Authentication Modal Function
-function initializeAuthModal() {
-    // DOM Elements
-    const authModal = document.getElementById('authModal');
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    
-    // Modal Functions
-    function openAuthModal() {
-        authModal.style.display = 'block';
+// Auth Modal JavaScript
+
+// Modal functionality
+function openAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.style.display = 'flex';
         document.body.style.overflow = 'hidden';
-        // Default to login tab
-        switchTab('login');
+        
+        // Focus on first input
+        setTimeout(() => {
+            const firstInput = modal.querySelector('input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }, 100);
     }
-    
-    function closeAuthModal() {
-        authModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
+}
+
+function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        
         // Reset forms
         resetForms();
     }
-    
-    function switchTab(tabName) {
-        // Remove active class from all tabs and forms
-        tabBtns.forEach(btn => btn.classList.remove('active'));
-        loginForm.classList.remove('active');
-        registerForm.classList.remove('active');
-        
-        // Add active class to selected tab and form
-        if (tabName === 'login') {
-            document.querySelector('[onclick="switchTab(\'login\')"]').classList.add('active');
-            loginForm.classList.add('active');
-        } else {
-            document.querySelector('[onclick="switchTab(\'register\')"]').classList.add('active');
-            registerForm.classList.add('active');
-        }
-    }
-    
-    function resetForms() {
-        // Reset login form
-        document.getElementById('loginEmail').value = '';
-        document.getElementById('loginPassword').value = '';
-        document.querySelector('input[name="remember"]').checked = false;
-        
-        // Reset register form
-        document.getElementById('registerName').value = '';
-        document.getElementById('registerEmail').value = '';
-        document.getElementById('registerPassword').value = '';
-        document.getElementById('confirmPassword').value = '';
-        document.querySelector('input[name="terms"]').checked = false;
-        
-        // Clear any error messages
-        clearErrorMessages();
-    }
-    
-    function clearErrorMessages() {
-        const errorMessages = document.querySelectorAll('.error-message');
-        errorMessages.forEach(msg => msg.remove());
-    }
-    
-    function showError(inputElement, message) {
-        clearErrorMessages();
-        
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.style.color = '#e74c3c';
-        errorDiv.style.fontSize = '0.8rem';
-        errorDiv.style.marginTop = '0.3rem';
-        errorDiv.textContent = message;
-        
-        inputElement.parentNode.appendChild(errorDiv);
-        inputElement.style.borderColor = '#e74c3c';
-    }
-    
-    function clearError(inputElement) {
-        const errorMessage = inputElement.parentNode.querySelector('.error-message');
-        if (errorMessage) {
-            errorMessage.remove();
-        }
-        inputElement.style.borderColor = '#e1e5e9';
-    }
-    
-    // Form Validation
-    function validateLoginForm() {
-        const email = document.getElementById('loginEmail');
-        const password = document.getElementById('loginPassword');
-        let isValid = true;
-        
-        // Clear previous errors
-        clearError(email);
-        clearError(password);
-        
-        // Email validation
-        if (!email.value.trim()) {
-            showError(email, 'Email is required');
-            isValid = false;
-        } else if (!isValidEmail(email.value)) {
-            showError(email, 'Please enter a valid email');
-            isValid = false;
-        }
-        
-        // Password validation
-        if (!password.value.trim()) {
-            showError(password, 'Password is required');
-            isValid = false;
-        } else if (password.value.length < 6) {
-            showError(password, 'Password must be at least 6 characters');
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-    
-    function validateRegisterForm() {
-        const name = document.getElementById('registerName');
-        const email = document.getElementById('registerEmail');
-        const password = document.getElementById('registerPassword');
-        const confirmPassword = document.getElementById('confirmPassword');
-        const terms = document.querySelector('input[name="terms"]');
-        let isValid = true;
-        
-        // Clear previous errors
-        clearError(name);
-        clearError(email);
-        clearError(password);
-        clearError(confirmPassword);
-        
-        // Name validation
-        if (!name.value.trim()) {
-            showError(name, 'Full name is required');
-            isValid = false;
-        } else if (name.value.trim().length < 2) {
-            showError(name, 'Name must be at least 2 characters');
-            isValid = false;
-        }
-        
-        // Email validation
-        if (!email.value.trim()) {
-            showError(email, 'Email is required');
-            isValid = false;
-        } else if (!isValidEmail(email.value)) {
-            showError(email, 'Please enter a valid email');
-            isValid = false;
-        }
-        
-        // Password validation
-        if (!password.value.trim()) {
-            showError(password, 'Password is required');
-            isValid = false;
-        } else if (password.value.length < 6) {
-            showError(password, 'Password must be at least 6 characters');
-            isValid = false;
-        }
-        
-        // Confirm password validation
-        if (!confirmPassword.value.trim()) {
-            showError(confirmPassword, 'Please confirm your password');
-            isValid = false;
-        } else if (password.value !== confirmPassword.value) {
-            showError(confirmPassword, 'Passwords do not match');
-            isValid = false;
-        }
-        
-        // Terms validation
-        if (!terms.checked) {
-            const termsLabel = terms.parentNode;
-            if (!termsLabel.querySelector('.error-message')) {
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'error-message';
-                errorDiv.style.color = '#e74c3c';
-                errorDiv.style.fontSize = '0.8rem';
-                errorDiv.style.marginTop = '0.3rem';
-                errorDiv.textContent = 'You must agree to the terms and conditions';
-                termsLabel.appendChild(errorDiv);
-            }
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-    
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
-    // Form Handlers
-    function handleLogin(event) {
-        event.preventDefault();
-        
-        if (!validateLoginForm()) {
-            return;
-        }
-        
-        const formData = {
-            email: document.getElementById('loginEmail').value,
-            password: document.getElementById('loginPassword').value,
-            remember: document.querySelector('input[name="remember"]').checked
-        };
-        
-        // Show loading state
-        const submitBtn = event.target.querySelector('.submit-btn');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
-        submitBtn.disabled = true;
-        
-        // Simulate API call (replace with actual authentication logic)
-        setTimeout(() => {
-            console.log('Login attempt:', formData);
-            
-            // Reset button
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            
-            // Show success message (replace with actual redirect logic)
-            showSuccessMessage('Login successful! Redirecting...');
-            
-            // Close modal after delay
-            setTimeout(() => {
-                closeAuthModal();
-                // Redirect to dashboard or user area
-                // window.location.href = '/dashboard';
-            }, 1500);
-            
-        }, 1500);
-    }
-    
-    function handleRegister(event) {
-        event.preventDefault();
-        
-        if (!validateRegisterForm()) {
-            return;
-        }
-        
-        const formData = {
-            name: document.getElementById('registerName').value,
-            email: document.getElementById('registerEmail').value,
-            password: document.getElementById('registerPassword').value,
-            terms: document.querySelector('input[name="terms"]').checked
-        };
-        
-        // Show loading state
-        const submitBtn = event.target.querySelector('.submit-btn');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
-        submitBtn.disabled = true;
-        
-        // Simulate API call (replace with actual registration logic)
-        setTimeout(() => {
-            console.log('Registration attempt:', formData);
-            
-            // Reset button
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-            
-            // Show success message
-            showSuccessMessage('Account created successfully! Please check your email for verification.');
-            
-            // Close modal after delay
-            setTimeout(() => {
-                closeAuthModal();
-            }, 2000);
-            
-        }, 1500);
-    }
-    
-    function showSuccessMessage(message) {
-        // Remove existing success messages
-        const existingMessages = document.querySelectorAll('.success-message');
-        existingMessages.forEach(msg => msg.remove());
-        
-        // Create success message
-        const successDiv = document.createElement('div');
-        successDiv.className = 'success-message';
-        successDiv.style.backgroundColor = '#d4edda';
-        successDiv.style.color = '#155724';
-        successDiv.style.padding = '1rem';
-        successDiv.style.borderRadius = '8px';
-        successDiv.style.marginTop = '1rem';
-        successDiv.style.textAlign = 'center';
-        successDiv.style.border = '1px solid #c3e6cb';
-        successDiv.textContent = message;
-        
-        // Insert after the form
-        const activeForm = document.querySelector('.form-container.active form');
-        activeForm.parentNode.insertBefore(successDiv, activeForm.nextSibling);
-    }
-    
-    // Password Toggle Function
-    function togglePassword(inputId) {
-        const input = document.getElementById(inputId);
-        const icon = input.parentNode.querySelector('.toggle-password i');
-        
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.className = 'fas fa-eye-slash';
-        } else {
-            input.type = 'password';
-            icon.className = 'fas fa-eye';
-        }
-    }
-    
-    // Social Login Handlers
-    function handleGoogleLogin() {
-        console.log('Google login clicked');
-        // Implement Google OAuth logic here
-        showSuccessMessage('Google login functionality coming soon!');
-    }
-    
-    function handleFacebookLogin() {
-        console.log('Facebook login clicked');
-        // Implement Facebook OAuth logic here
-        showSuccessMessage('Facebook login functionality coming soon!');
-    }
-    
-    // Event Listeners
-    function setupEventListeners() {
-        // Close modal when clicking outside
-        authModal.addEventListener('click', (e) => {
-            if (e.target === authModal) {
-                closeAuthModal();
-            }
-        });
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && authModal.style.display === 'block') {
-                closeAuthModal();
-            }
-        });
-        
-        // Real-time validation
-        const inputs = document.querySelectorAll('.auth-form input');
-        inputs.forEach(input => {
-            input.addEventListener('blur', () => {
-                if (input.type !== 'checkbox') {
-                    clearError(input);
-                }
-            });
-        });
-        
-        // Social login buttons
-        const googleBtns = document.querySelectorAll('.social-btn.google');
-        const facebookBtns = document.querySelectorAll('.social-btn.facebook');
-        
-        googleBtns.forEach(btn => {
-            btn.addEventListener('click', handleGoogleLogin);
-        });
-        
-        facebookBtns.forEach(btn => {
-            btn.addEventListener('click', handleFacebookLogin);
-        });
-    }
-    
-    // Initialize the modal
-    function init() {
-        setupEventListeners();
-        console.log('Auth modal initialized successfully!');
-    }
-    
-    // Return public functions
-    return {
-        init,
-        openAuthModal,
-        closeAuthModal,
-        switchTab,
-        handleLogin,
-        handleRegister,
-        togglePassword
-    };
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    const authModal = initializeAuthModal();
+// Tab switching
+function switchTab(tabName) {
+    // Remove active class from all tabs and forms
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const formContainers = document.querySelectorAll('.form-container');
     
-    // Make functions globally available for HTML onclick attributes
-    window.openAuthModal = authModal.openAuthModal;
-    window.closeAuthModal = authModal.closeAuthModal;
-    window.switchTab = authModal.switchTab;
-    window.handleLogin = authModal.handleLogin;
-    window.handleRegister = authModal.handleRegister;
-    window.togglePassword = authModal.togglePassword;
+    tabBtns.forEach(btn => btn.classList.remove('active'));
+    formContainers.forEach(form => form.classList.remove('active'));
     
-    // Initialize the modal
-    authModal.init();
+    // Add active class to selected tab and form
+    if (tabName === 'login') {
+        document.querySelector('.tab-btn:first-child').classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+    } else {
+        document.querySelector('.tab-btn:last-child').classList.add('active');
+        document.getElementById('registerForm').classList.add('active');
+    }
+}
+
+// Password toggle functionality
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const toggleBtn = input.nextElementSibling;
+    const icon = toggleBtn.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// Form handling
+function handleLogin(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const username = formData.get('username');
+    const password = formData.get('password');
+    const remember = formData.get('remember');
+    
+    // Basic validation
+    if (!username || !password) {
+        showNotification('Please fill in all fields', 'error');
+        return;
+    }
+    
+    // Here you would typically send the data to your backend
+    // For demo purposes, let's simulate a successful login
+    if (username === 'admin' && password === 'password') {
+        showNotification('Login successful!', 'success');
+        closeAuthModal();
+        
+        // Update UI to show logged in state
+        updateLoginState(true, username);
+    } else {
+        showNotification('Invalid username or password', 'error');
+    }
+}
+
+function handleRegister(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const name = formData.get('name');
+    const username = formData.get('username');
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirmPassword');
+    const terms = formData.get('terms');
+    
+    // Basic validation
+    if (!name || !username || !password || !confirmPassword) {
+        showNotification('Please fill in all fields', 'error');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        showNotification('Passwords do not match', 'error');
+        return;
+    }
+    
+    if (!terms) {
+        showNotification('You must agree to the terms and conditions', 'error');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showNotification('Password must be at least 6 characters long', 'error');
+        return;
+    }
+    
+    // Here you would typically send the data to your backend
+    // For demo purposes, let's simulate a successful registration
+    showNotification('Account created successfully! You can now login.', 'success');
+    
+    // Switch to login tab
+    switchTab('login');
+    
+    // Clear register form
+    event.target.reset();
+}
+
+// Social login handlers
+function handleGoogleLogin() {
+    showNotification('Google login functionality coming soon!', 'info');
+}
+
+function handleFacebookLogin() {
+    showNotification('Facebook login functionality coming soon!', 'info');
+}
+
+// Update login state
+function updateLoginState(isLoggedIn, username = '') {
+    const loginBtn = document.querySelector('.login-btn');
+    const ctaBtn = document.querySelector('.cta .btn-primary');
+    
+    if (isLoggedIn) {
+        loginBtn.textContent = `Welcome, ${username}`;
+        loginBtn.onclick = null;
+        loginBtn.style.background = '#10b981';
+        
+        if (ctaBtn) {
+            ctaBtn.textContent = 'Go to Dashboard';
+            ctaBtn.onclick = () => showNotification('Dashboard coming soon!', 'info');
+        }
+    } else {
+        loginBtn.textContent = 'Login';
+        loginBtn.onclick = openAuthModal;
+        loginBtn.style.background = '#2563eb';
+        
+        if (ctaBtn) {
+            ctaBtn.textContent = 'Sign Up Now';
+            ctaBtn.onclick = openAuthModal;
+        }
+    }
+}
+
+// Reset forms
+function resetForms() {
+    const forms = document.querySelectorAll('.auth-form');
+    forms.forEach(form => {
+        form.reset();
+    });
+    
+    // Reset password fields to password type
+    const passwordInputs = document.querySelectorAll('input[type="text"]');
+    passwordInputs.forEach(input => {
+        if (input.id.includes('Password')) {
+            input.type = 'password';
+            const icon = input.nextElementSibling.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    });
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('authModal');
+    if (event.target === modal) {
+        closeAuthModal();
+    }
 });
 
-function openLoginModal() {
-    // Show your login modal here
-    document.getElementById('loginModal').style.display = 'block';
+// Close modal on escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modal = document.getElementById('authModal');
+        if (modal && modal.style.display === 'flex') {
+            closeAuthModal();
+        }
+        const enlistModal = document.getElementById('enlistModal');
+        if (enlistModal && enlistModal.style.display === 'flex') {
+            closeEnlistModal();
+        }
+    }
+});
+
+// Enlist Modal Functions
+function openEnlistModal() {
+    const modal = document.getElementById('enlistModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Focus on first input
+        setTimeout(() => {
+            const firstInput = modal.querySelector('input');
+            if (firstInput) {
+                firstInput.focus();
+            }
+        }, 100);
+    }
+}
+
+function closeEnlistModal() {
+    const modal = document.getElementById('enlistModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+        
+        // Reset form
+        const form = modal.querySelector('.enlist-form');
+        if (form) {
+            form.reset();
+        }
+        
+        // Show table view by default
+        hideEnlistForm();
+    }
+}
+
+// Enlist form functions
+function showEnlistForm() {
+    const formContainer = document.getElementById('enlistFormContainer');
+    const tableContainer = document.querySelector('.enlist-table-container');
+    
+    if (formContainer && tableContainer) {
+        formContainer.style.display = 'block';
+        tableContainer.style.display = 'none';
+    }
+}
+
+function hideEnlistForm() {
+    const formContainer = document.getElementById('enlistFormContainer');
+    const tableContainer = document.querySelector('.enlist-table-container');
+    
+    if (formContainer && tableContainer) {
+        formContainer.style.display = 'none';
+        tableContainer.style.display = 'block';
+    }
+}
+
+function submitEnlistForm() {
+    showEnlistForm();
+}
+
+// Close enlist modal when clicking outside
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('enlistModal');
+    if (event.target === modal) {
+        closeEnlistModal();
+    }
+});
+
+// Form submission handlers
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is already logged in (from localStorage or session)
+    const savedUsername = localStorage.getItem('username');
+    if (savedUsername) {
+        updateLoginState(true, savedUsername);
+    }
+    
+    // Initialize enlist modal functionality
+    initializeEnlistModal();
+});
+
+// Initialize enlist modal functionality
+function initializeEnlistModal() {
+    const filterCategory = document.getElementById('filterCategory');
+    const filterStatus = document.getElementById('filterStatus');
+    const searchInput = document.getElementById('searchEquipment');
+    const filterBtn = document.querySelector('.btn-filter');
+    const clearBtn = document.querySelector('.btn-clear');
+
+    if (filterBtn) {
+        filterBtn.addEventListener('click', function() {
+            // Implement filter logic here
+            console.log('Filtering by:', {
+                category: filterCategory ? filterCategory.value : '',
+                status: filterStatus ? filterStatus.value : '',
+                search: searchInput ? searchInput.value : ''
+            });
+        });
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            if (filterCategory) filterCategory.value = '';
+            if (filterStatus) filterStatus.value = '';
+            if (searchInput) searchInput.value = '';
+        });
+    }
+}
+
+// Notification system (if not already defined in main.js)
+if (typeof showNotification === 'undefined') {
+    function showNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existingNotifications = document.querySelectorAll('.notification');
+        existingNotifications.forEach(notification => notification.remove());
+        
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        
+        // Style the notification
+        notification.style.cssText = `
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#2563eb'};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+            font-weight: 500;
+        `;
+        
+        // Mobile responsive notification
+        if (window.innerWidth <= 768) {
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                left: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#2563eb'};
+                color: white;
+                padding: 1rem;
+                border-radius: 8px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                z-index: 10000;
+                transform: translateY(-100px);
+                transition: transform 0.3s ease;
+                max-width: none;
+                word-wrap: break-word;
+                font-size: 0.9rem;
+                font-weight: 500;
+                text-align: center;
+            `;
+        }
+        
+        // Add to DOM
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.style.transform = window.innerWidth <= 768 ? 'translateY(0)' : 'translateX(0)';
+        }, 100);
+        
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            notification.style.transform = window.innerWidth <= 768 ? 'translateY(-100px)' : 'translateX(400px)';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 300);
+        }, 3000);
+    }
 }

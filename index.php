@@ -1,0 +1,607 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="EquipRent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <title>EquipRent - Equipment Rental Platform</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>EquipRent</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#products" class="nav-link">Browse</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.php" class="nav-link">About</a>
+                </li>
+            </ul>
+            <div class="nav-actions">
+                <button class="search-btn" aria-label="Search equipment"><i class="fas fa-search"></i></button>
+                <button class="cart-btn" aria-label="View cart"><i class="fas fa-shopping-cart"></i><span
+                        class="cart-count">0</span></button>
+                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                    <div class="user-menu">
+                        <span class="welcome-text">Welcome,
+                            <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
+                        <a href="controller/logout.php" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <button class="login-btn" onclick="openAuthModal()">Login</button>
+                <?php endif; ?>
+            </div>
+            <div class="hamburger" aria-label="Toggle navigation menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Rent Equipment, Build Dreams</h1>
+                <p class="hero-subtitle">Access professional-grade equipment without the hefty price tag. Quality tools
+                    for every project.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary">Browse Equipment</button>
+                    <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                        <button class="btn btn-secondary" onclick="openEnlistModal()">Enlist Your Item</button>
+                    <?php else: ?>
+                        <button class="btn btn-secondary">Learn More</button>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-placeholder">
+                    <i class="fas fa-tools" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Popular Categories</h2>
+            <div class="categories-grid">
+                <div class="category-item" tabindex="0" role="button" aria-label="Construction equipment category">
+                    <div class="category-icon">
+                        <i class="fas fa-hammer" aria-hidden="true"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Construction</h3>
+                    </div>
+                </div>
+                <div class="category-item" tabindex="0" role="button" aria-label="Painting equipment category">
+                    <div class="category-icon">
+                        <i class="fas fa-paint-brush" aria-hidden="true"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Painting</h3>
+                    </div>
+                </div>
+                <div class="category-item" tabindex="0" role="button" aria-label="Gardening equipment category">
+                    <div class="category-icon">
+                        <i class="fas fa-leaf" aria-hidden="true"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Gardening</h3>
+                    </div>
+                </div>
+                <div class="category-item" tabindex="0" role="button" aria-label="Photography equipment category">
+                    <div class="category-icon">
+                        <i class="fas fa-camera" aria-hidden="true"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Photography</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section id="products" class="featured-products">
+        <div class="container">
+            <h2 class="section-title">Browse equipment</h2>
+            <div class="products-grid">
+                <div class="product-card" tabindex="0" role="button" aria-label="Professional Drill Set product">
+                    <div class="product-image">
+                        <div class="product-placeholder">
+                            <i class="fas fa-drill" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Professional Drill Set</h3>
+                        <p class="product-description">Complete drill set with multiple attachments</p>
+                        <div class="product-meta">
+                            <span class="price">$25/day</span>
+                            <span class="rating"><i class="fas fa-star" aria-hidden="true"></i> 4.8</span>
+                        </div>
+                        <button class="btn btn-outline">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card" tabindex="0" role="button" aria-label="Extension Ladder product">
+                    <div class="product-image">
+                        <div class="product-placeholder">
+                            <i class="fas fa-ladder" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Extension Ladder</h3>
+                        <p class="product-description">24ft aluminum extension ladder</p>
+                        <div class="product-meta">
+                            <span class="price">$15/day</span>
+                            <span class="rating"><i class="fas fa-star" aria-hidden="true"></i> 4.6</span>
+                        </div>
+                        <button class="btn btn-outline">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card" tabindex="0" role="button" aria-label="Circular Saw product">
+                    <div class="product-image">
+                        <div class="product-placeholder">
+                            <i class="fas fa-saw" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Circular Saw</h3>
+                        <p class="product-description">7-1/4" circular saw with blade</p>
+                        <div class="product-meta">
+                            <span class="price">$20/day</span>
+                            <span class="rating"><i class="fas fa-star" aria-hidden="true"></i> 4.7</span>
+                        </div>
+                        <button class="btn btn-outline">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card" tabindex="0" role="button" aria-label="Air Compressor product">
+                    <div class="product-image">
+                        <div class="product-placeholder">
+                            <i class="fas fa-compress-arrows-alt" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>Air Compressor</h3>
+                        <p class="product-description">20-gallon air compressor</p>
+                        <div class="product-meta">
+                            <span class="price">$35/day</span>
+                            <span class="rating"><i class="fas fa-star" aria-hidden="true"></i> 4.9</span>
+                        </div>
+                        <button class="btn btn-outline">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Get Started?</h2>
+                <p>Join thousands of satisfied customers who trust EquipRent for their equipment needs.</p>
+                <button class="btn btn-primary" onclick="openAuthModal()">Sign Up Now</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>EquipRent</h3>
+                    <p>Your trusted partner for equipment rental needs.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Follow us on Facebook"><i class="fab fa-facebook"
+                                aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Follow us on Twitter"><i class="fab fa-twitter"
+                                aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Follow us on Instagram"><i class="fab fa-instagram"
+                                aria-hidden="true"></i></a>
+                        <a href="#" aria-label="Follow us on LinkedIn"><i class="fab fa-linkedin"
+                                aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="about.php">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Contact Support</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone" aria-hidden="true"></i> +1 (555) 123-4567</p>
+                    <p><i class="fas fa-envelope" aria-hidden="true"></i> info@equiprent.com</p>
+                    <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> 123 Equipment St, City, State</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 EquipRent. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+
+            <!-- Tab Navigation -->
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="switchTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="form-container active">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your account</p>
+
+                <form class="auth-form" method="POST" action="controller/auth.php">
+                    <input type="hidden" name="action" value="login">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" name="email" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="Password" name="password" required >
+                            <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="remember">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot Password?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </form>
+
+                <?php if (isset($_SESSION['login_error']) && !empty($_SESSION['login_error'])): ?>
+                    <div class="error-message"><?php echo htmlspecialchars($_SESSION['login_error']); ?></div>
+                    <?php unset($_SESSION['login_error']); ?>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['login_success']) && !empty($_SESSION['login_success'])): ?>
+                    <div class="success-message"><?php echo htmlspecialchars($_SESSION['login_success']); ?></div>
+                    <?php unset($_SESSION['login_success']); ?>
+                <?php endif; ?>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="form-container">
+                <h2>Create Account</h2>
+                <p>Join our community today</p>
+
+                <form class="auth-form" method="POST" action="controller/auth.php">
+                    <input type="hidden" name="action" value="register">
+                    <div class="form-group">
+                        <label for="registerName">Full Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="registerName" placeholder="Full Name" name="name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="registerEmail" placeholder="Email" name="email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="registerPassword" placeholder="Password" name="password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('registerPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="confirmPassword" placeholder="Confirm Password" name="confirmPassword" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="terms" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="#">Terms & Conditions</a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </form>
+
+                <div class="social-login">
+                    <p>Or register with</p>
+                    <div class="social-buttons">
+                        <button type="button" class="social-btn google" onclick="handleGoogleLogin()">
+                            <i class="fab fa-google"></i> Google
+                        </button>
+                        <button type="button" class="social-btn facebook" onclick="handleFacebookLogin()">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </button>
+                    </div>
+                </div>
+
+                <?php if (isset($_SESSION['register_error']) && !empty($_SESSION['register_error'])): ?>
+                    <div class="error-message"><?php echo htmlspecialchars($_SESSION['register_error']); ?></div>
+                    <?php unset($_SESSION['register_error']); ?>
+                <?php endif; ?>
+                <?php if (isset($_SESSION['register_success']) && !empty($_SESSION['register_success'])): ?>
+                    <div class="success-message"><?php echo htmlspecialchars($_SESSION['register_success']); ?></div>
+                    <?php unset($_SESSION['register_success']); ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlist Messages -->
+    <?php if (isset($_SESSION['enlist_error']) && !empty($_SESSION['enlist_error'])): ?>
+        <div class="enlist-error-message"><?php echo htmlspecialchars($_SESSION['enlist_error']); ?></div>
+        <?php unset($_SESSION['enlist_error']); ?>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['enlist_success']) && !empty($_SESSION['enlist_success'])): ?>
+        <div class="enlist-success-message"><?php echo htmlspecialchars($_SESSION['enlist_success']); ?></div>
+        <?php unset($_SESSION['enlist_success']); ?>
+    <?php endif; ?>
+
+    <!-- Enlist Item Modal -->
+    <div id="enlistModal" class="modal">
+        <div class="modal-content enlist-modal">
+            <!-- Header Section -->
+            <div class="enlist-header">
+                <div class="enlist-title">
+                    <i class="fas fa-users"></i>
+                    <h2>Equipment Management</h2>
+                </div>
+                <div class="enlist-header-buttons">
+                    <button type="button" class="btn-add" onclick="submitEnlistForm()">
+                        <i class="fas fa-plus"></i> Add New Equipment
+                    </button>
+                    <button type="button" class="btn-back" onclick="closeEnlistModal()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter and Search Section -->
+            <div class="enlist-filters">
+                <div class="filter-group">
+                    <label>Category:</label>
+                    <select id="filterCategory" class="filter-select">
+                        <option value="">All Categories</option>
+                        <option value="construction">Construction</option>
+                        <option value="painting">Painting</option>
+                        <option value="gardening">Gardening</option>
+                        <option value="photography">Photography</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Status:</label>
+                    <select id="filterStatus" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="available">Available</option>
+                        <option value="rented">Rented</option>
+                        <option value="maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Search:</label>
+                    <input type="text" id="searchEquipment" class="search-input" placeholder="Search by name or description">
+                </div>
+                <div class="filter-actions">
+                    <button type="button" class="btn-filter">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <button type="button" class="btn-clear">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Bar -->
+            <div class="enlist-summary">
+                <div class="summary-item">
+                    <i class="fas fa-users"></i>
+                    <span>Equipment Management System</span>
+                </div>
+                <div class="summary-item">
+                    <i class="fas fa-list"></i>
+                    <span>Total Equipment: 0</span>
+                </div>
+                <div class="summary-item">
+                    <i class="fas fa-eye"></i>
+                    <span>Showing: 0 of 0</span>
+                </div>
+            </div>
+
+            <!-- Equipment Table -->
+            <div class="enlist-table-container">
+                <table class="enlist-table">
+                    <thead>
+                        <tr>
+                            <th># ID</th>
+                            <th><i class="fas fa-user"></i> Equipment Name</th>
+                            <th><i class="fas fa-user"></i> Category</th>
+                            <th><i class="fas fa-tag"></i> Daily Rate</th>
+                            <th><i class="fas fa-phone"></i> Location</th>
+                            <th><i class="fas fa-cog"></i> Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipmentTableBody">
+                        <tr class="no-data">
+                            <td colspan="6">
+                                <div class="no-data-content">
+                                    <i class="fas fa-tools"></i>
+                                    <p>No equipment enlisted yet</p>
+                                    <button type="button" class="btn-add-first" onclick="showEnlistForm()">
+                                        <i class="fas fa-plus"></i> Enlist Your First Equipment
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Enlist Form (Hidden by default) -->
+            <div id="enlistFormContainer" class="enlist-form-container" style="display: none;">
+                <div class="form-header">
+                    <h3>Enlist New Equipment</h3>
+                    <button type="button" class="btn-close-form" onclick="hideEnlistForm()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form class="enlist-form" method="POST" action="controller/enlist_item.php">
+                    <div class="form-section">
+                        <h4>Basic Information</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="itemName">Equipment Name</label>
+                                <input type="text" id="itemName" name="item_name" placeholder="Enter equipment name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="itemCategory">Category</label>
+                                <select id="itemCategory" name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="construction">Construction</option>
+                                    <option value="painting">Painting</option>
+                                    <option value="gardening">Gardening</option>
+                                    <option value="photography">Photography</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="itemDescription">Description</label>
+                            <textarea id="itemDescription" name="description" rows="3"
+                                placeholder="Describe your equipment, features, and condition..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>Pricing & Location</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="dailyRate">Daily Rate ($)</label>
+                                <input type="number" id="dailyRate" name="daily_rate" min="1" step="0.01" placeholder="25.00" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="itemLocation">Location</label>
+                                <input type="text" id="itemLocation" name="location" placeholder="City, State" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>Media & Terms</h4>
+                        <div class="form-group full-width">
+                            <label for="itemPhotos">Photos (Optional)</label>
+                            <div class="file-upload-area">
+                                <input type="file" id="itemPhotos" name="photos[]" multiple accept="image/*">
+                                <div class="upload-placeholder">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag and drop</p>
+                                    <span>PNG, JPG, GIF up to 10MB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="terms" required>
+                                <span class="checkmark"></span>
+                                I agree to the <a href="#">Equipment Rental Terms</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="hideEnlistForm()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-plus"></i> Enlist Equipment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="JS/main.js"></script>
+    <script src="JS/auth.js"></script>
+</body>
+
+</html>
