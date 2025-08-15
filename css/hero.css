@@ -1,12 +1,90 @@
 /* Hero Section Styles */
 .hero {
     padding: 120px 0 80px;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    background: #212529;
     min-height: 100vh;
     display: flex;
     align-items: center;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Carousel Background */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(33, 37, 41, 0.9) 0%, rgba(52, 58, 64, 0.7) 50%, rgba(73, 80, 87, 0.5) 100%);
+    z-index: 1;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    z-index: 2;
+    opacity: 0.3;
+}
+
+/* Carousel Background Images */
+.hero-carousel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    opacity: 0.25; /* Increased from 0.15 for better visibility */
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+    will-change: opacity; /* Optimize for opacity changes */
+}
+
+.carousel-slide.active {
+    opacity: 1;
+}
+
+/* Ensure at least one slide is always visible as fallback */
+.carousel-slide:first-child {
+    opacity: 1;
+}
+
+.carousel-slide:nth-child(1) {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect width="800" height="600" fill="%23212529"/><circle cx="400" cy="300" r="150" fill="%23343a40" opacity="0.8"/><circle cx="400" cy="300" r="100" fill="%23495057" opacity="0.6"/><circle cx="400" cy="300" r="50" fill="%236c757d" opacity="0.4"/></svg>');
+}
+
+.carousel-slide:nth-child(2) {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect width="800" height="600" fill="%23212529"/><rect x="200" y="150" width="400" height="300" fill="%23343a40" opacity="0.7" rx="20"/><rect x="250" y="200" width="300" height="200" fill="%23495057" opacity="0.5" rx="15"/></svg>');
+}
+
+.carousel-slide:nth-child(3) {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect width="800" height="600" fill="%23212529"/><polygon points="400,100 500,300 300,300" fill="%23343a40" opacity="0.6"/><polygon points="400,200 450,350 350,350" fill="%23495057" opacity="0.4"/></svg>');
+}
+
+.carousel-slide:nth-child(4) {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect width="800" height="600" fill="%23212529"/><circle cx="300" cy="300" r="80" fill="%23343a40" opacity="0.7"/><circle cx="500" cy="300" r="80" fill="%23495057" opacity="0.5"/><rect x="350" y="250" width="100" height="100" fill="%236c757d" opacity="0.3" rx="10"/></svg>');
+}
+
+/* Content Container with proper z-index */
 .hero-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -15,6 +93,8 @@
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
     align-items: center;
+    position: relative;
+    z-index: 10;
 }
 
 .hero-content {
@@ -26,18 +106,24 @@
 .hero-title {
     font-size: 3.5rem;
     font-weight: 800;
-    color: #1e293b;
+    color: #ffffff;
     margin-bottom: 1.5rem;
     line-height: 1.1;
     letter-spacing: -0.02em;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+    position: relative;
+    z-index: 5;
 }
 
 .hero-subtitle {
     font-size: 1.2rem;
-    color: #64748b;
+    color: #f8fafc; /* Slightly brighter for better contrast */
     margin-bottom: 2rem;
     line-height: 1.6;
     max-width: 500px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.3); /* Enhanced shadow */
+    position: relative;
+    z-index: 5;
 }
 
 .hero-buttons {
@@ -45,12 +131,16 @@
     gap: 1rem;
     flex-wrap: wrap;
     align-items: center;
+    position: relative;
+    z-index: 5;
 }
 
 .hero-image {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    z-index: 10;
 }
 
 .hero-placeholder {
@@ -67,6 +157,8 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .hero-placeholder::before {
@@ -87,6 +179,42 @@
 .hero-placeholder:hover {
     transform: translateY(-5px);
     box-shadow: 0 25px 50px rgba(37, 99, 235, 0.4);
+}
+
+/* Carousel Navigation Dots */
+.carousel-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 15;
+    pointer-events: auto; /* Ensure dots are clickable */
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    pointer-events: auto; /* Ensure individual dots are clickable */
+}
+
+.carousel-dot.active {
+    background: #2563eb;
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.5); /* Add glow effect */
+}
+
+.carousel-dot:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3); /* Add hover glow */
 }
 
 /* Mobile responsive styles */
@@ -117,6 +245,7 @@
         line-height: 1.2;
         margin-bottom: 1rem;
         padding: 0 0.5rem;
+        color: #ffffff;
     }
     
     .hero-subtitle {
@@ -124,6 +253,7 @@
         padding: 0 1rem;
         margin-bottom: 1.5rem;
         max-width: none;
+        color: #e9ecef;
     }
     
     .hero-buttons {
@@ -144,6 +274,15 @@
     .hero-placeholder:hover {
         transform: none;
     }
+    
+    .carousel-dots {
+        bottom: 20px;
+    }
+    
+    .carousel-dot {
+        width: 10px;
+        height: 10px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -159,12 +298,14 @@
     .hero-title {
         font-size: 2rem;
         padding: 0 0.25rem;
+        color: #ffffff;
     }
     
     .hero-subtitle {
         font-size: 1rem;
         padding: 0 0.5rem;
         margin-bottom: 1.25rem;
+        color: #e9ecef;
     }
     
     .hero-placeholder {
@@ -176,21 +317,36 @@
     .hero-buttons {
         gap: 0.75rem;
     }
+    
+    .carousel-dots {
+        bottom: 15px;
+    }
+    
+    .carousel-dot {
+        width: 8px;
+        height: 8px;
+    }
 }
 
 @media (max-width: 360px) {
     .hero-title {
         font-size: 1.75rem;
+        color: #ffffff;
     }
     
     .hero-subtitle {
         font-size: 0.9rem;
+        color: #e9ecef;
     }
     
     .hero-placeholder {
         width: 180px;
         height: 180px;
         font-size: 2rem;
+    }
+    
+    .carousel-dots {
+        bottom: 10px;
     }
 }
 
@@ -203,10 +359,12 @@
     
     .hero-title {
         font-size: 3rem;
+        color: #ffffff;
     }
     
     .hero-subtitle {
         font-size: 1.1rem;
+        color: #e9ecef;
     }
     
     .hero-placeholder {
@@ -229,11 +387,13 @@
     
     .hero-title {
         font-size: 2rem;
+        color: #ffffff;
     }
     
     .hero-subtitle {
         font-size: 1rem;
         margin-bottom: 1rem;
+        color: #e9ecef;
     }
     
     .hero-placeholder {
@@ -264,19 +424,8 @@
         transform: none;
         box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
     }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .hero {
-        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    }
     
-    .hero-title {
-        color: #f8fafc;
-    }
-    
-    .hero-subtitle {
-        color: #cbd5e1;
+    .carousel-slide {
+        transition: none;
     }
 }

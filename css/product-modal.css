@@ -1,0 +1,585 @@
+/* ========================================
+   PRODUCT MODAL STYLES - EQUIPRENT PLATFORM
+   ======================================== */
+
+/* ========================================
+   PRODUCT MODAL CLOSE BUTTON
+   ======================================== */
+.product-modal .close {
+    color: #64748b;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.product-modal .close:hover,
+.product-modal .close:focus {
+    color: #1e293b;
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ========================================
+   PRODUCT MODAL LAYOUT
+   ======================================== */
+.product-modal {
+    max-width: 1000px;
+    width: 95%;
+    padding: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.product-modal-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: 600px;
+}
+
+/* ========================================
+   PRODUCT IMAGE SECTION
+   ======================================== */
+.product-modal-image {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+}
+
+.product-modal-placeholder {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
+}
+
+.product-modal-placeholder i {
+    font-size: 4rem;
+    color: white;
+    opacity: 0.9;
+}
+
+/* ========================================
+   PRODUCT BADGES
+   ======================================== */
+.product-badges {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge-available {
+    background: #10b981;
+    color: white;
+}
+
+.badge-featured {
+    background: #f59e0b;
+    color: white;
+}
+
+/* ========================================
+   PRODUCT DETAILS SECTION
+   ======================================== */
+.product-modal-details {
+    padding: 2rem;
+    overflow-y: auto;
+    max-height: 600px;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ========================================
+   PRODUCT HEADER
+   ======================================== */
+.product-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #f1f5f9;
+}
+
+.product-title {
+    margin: 0 0 1rem 0;
+    color: #1e293b;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.025em;
+    line-height: var(--line-height-tight);
+}
+
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stars {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.stars i {
+    color: #fbbf24;
+    font-size: 1rem;
+}
+
+.rating-text {
+    color: #64748b;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+/* ========================================
+   PRODUCT PRICING
+   ======================================== */
+.product-price-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.price-main {
+    display: flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.price-amount {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-5xl);
+    font-weight: var(--font-weight-bold);
+    color: #2563eb;
+}
+
+.price-period {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-lg);
+    color: #64748b;
+    font-weight: var(--font-weight-medium);
+}
+
+.price-options {
+    display: flex;
+    gap: 1rem;
+}
+
+.price-option {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-sm);
+    color: #475569;
+    font-weight: var(--font-weight-medium);
+}
+
+/* ========================================
+   PRODUCT DESCRIPTION
+   ======================================== */
+.product-description-full {
+    margin-bottom: 2rem;
+}
+
+.product-description-full h3 {
+    margin: 0 0 1rem 0;
+    color: #1e293b;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+}
+
+.product-description-full p {
+    margin: 0 0 1.5rem 0;
+    color: #475569;
+    font-family: var(--font-family-primary);
+    line-height: var(--line-height-relaxed);
+}
+
+/* ========================================
+   PRODUCT FEATURES
+   ======================================== */
+.product-features {
+    margin-bottom: 1.5rem;
+}
+
+.product-features h4 {
+    margin: 0 0 1rem 0;
+    color: #1e293b;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+}
+
+.product-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.product-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    color: #475569;
+    font-family: var(--font-family-primary);
+}
+
+.product-features i {
+    color: #10b981;
+    font-size: 0.875rem;
+}
+
+/* ========================================
+   PRODUCT SPECIFICATIONS
+   ======================================== */
+.product-specs {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.product-specs h4 {
+    margin: 0 0 1rem 0;
+    color: #1e293b;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+}
+
+.specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.spec-item:last-child {
+    border-bottom: none;
+}
+
+.spec-label {
+    color: #64748b;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+.spec-value {
+    color: #1e293b;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ========================================
+   PRODUCT LOCATION
+   ======================================== */
+.product-location {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+.product-location h4 {
+    margin: 0 0 1rem 0;
+    color: #1e293b;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.product-location h4 i {
+    color: #ef4444;
+}
+
+.product-location p {
+    margin: 0 0 0.5rem 0;
+    color: #475569;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-sm);
+}
+
+.location-distance {
+    color: #2563eb;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ========================================
+   PRODUCT ACTIONS
+   ======================================== */
+.product-actions {
+    border-top: 2px solid #f1f5f9;
+    padding-top: 2rem;
+}
+
+.rental-options {
+    margin-bottom: 2rem;
+}
+
+.rental-dates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.date-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.date-input label {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: #374151;
+}
+
+.date-input input {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-sm);
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.date-input input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.rental-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f1f5f9;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.rental-days {
+    color: #475569;
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-medium);
+}
+
+.rental-total {
+    color: #2563eb;
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-lg);
+}
+
+/* ========================================
+   ACTION BUTTONS
+   ======================================== */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-buttons .btn {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons .btn-secondary {
+    background: #64748b;
+    color: white;
+    border: none;
+}
+
+.action-buttons .btn-secondary:hover {
+    background: #475569;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+
+.action-buttons .btn-primary {
+    background: #2563eb;
+    color: white;
+    border: none;
+}
+
+.action-buttons .btn-primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 768px) {
+    .product-modal {
+        width: 98%;
+        margin: 0.5rem;
+        border-radius: 12px;
+    }
+    
+    .product-modal .close {
+        right: 15px;
+        top: 15px;
+        width: 35px;
+        height: 35px;
+        font-size: 28px;
+    }
+    
+    .product-modal-content {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    
+    .product-modal-image {
+        padding: 2rem 1rem;
+    }
+    
+    .product-modal-placeholder {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .product-modal-placeholder i {
+        font-size: 3rem;
+    }
+    
+    .product-badges {
+        top: 1rem;
+        left: 1rem;
+    }
+    
+    .badge {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.625rem;
+    }
+    
+    .product-modal-details {
+        padding: 1.5rem;
+        max-height: calc(100vh - 220px);
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .product-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .price-amount {
+        font-size: var(--font-size-4xl);
+    }
+    
+    .rental-dates {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .specs-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-modal-details {
+        padding: 1rem;
+    }
+    
+    .product-modal .close {
+        right: 10px;
+        top: 10px;
+        width: 30px;
+        height: 30px;
+        font-size: 24px;
+    }
+    
+    .product-title {
+        font-size: var(--font-size-lg);
+    }
+    
+    .price-amount {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.5rem;
+    }
+}

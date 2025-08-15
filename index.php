@@ -17,6 +17,7 @@ session_start();
     <title>EquipRent - Equipment Rental Platform</title>
     <link rel="stylesheet" href="css/main.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/regular.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
 </head>
@@ -38,13 +39,21 @@ session_start();
                 <li class="nav-item">
                     <a href="about.php" class="nav-link">About</a>
                 </li>
+                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                    <li class="nav-item mobile-only">
+                        <a href="controller/logout.php" class="nav-link logout-link">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </li>
+                <?php endif; ?>
             </ul>
             <div class="nav-actions">
                 <button class="search-btn" aria-label="Search equipment"><i class="fas fa-search"></i></button>
                 <button class="cart-btn" aria-label="View cart"><i class="fas fa-shopping-cart"></i><span
                         class="cart-count">0</span></button>
                 <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                    <div class="user-menu">
+                    <span class="welcome-text-mobile mobile-only">Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
+                    <div class="user-menu desktop-only">
                         <span class="welcome-text">Welcome,
                             <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
                         <a href="controller/logout.php" class="logout-btn">
@@ -65,6 +74,22 @@ session_start();
 
     <!-- Hero Section -->
     <section id="home" class="hero">
+        <!-- Carousel Background -->
+        <div class="hero-carousel">
+            <div class="carousel-slide active"></div>
+            <div class="carousel-slide"></div>
+            <div class="carousel-slide"></div>
+            <div class="carousel-slide"></div>
+        </div>
+        
+        <!-- Carousel Navigation Dots -->
+        <div class="carousel-dots">
+            <span class="carousel-dot active" data-slide="0"></span>
+            <span class="carousel-dot" data-slide="1"></span>
+            <span class="carousel-dot" data-slide="2"></span>
+            <span class="carousel-dot" data-slide="3"></span>
+        </div>
+        
         <div class="hero-container">
             <div class="hero-content">
                 <h1 class="hero-title">Rent Equipment, Build Dreams</h1>
@@ -430,93 +455,199 @@ session_start();
                 </div>
             </div>
 
-            <!-- Filter and Search Section -->
-            <div class="enlist-filters">
-                <div class="filter-group">
-                    <label>Category:</label>
-                    <select id="filterCategory" class="filter-select">
-                        <option value="">All Categories</option>
-                        <option value="construction">Construction</option>
-                        <option value="painting">Painting</option>
-                        <option value="gardening">Gardening</option>
-                        <option value="photography">Photography</option>
-                        <option value="other">Other</option>
-                    </select>
+            <!-- Tab Navigation -->
+            <div class="enlist-tabs">
+                <button class="enlist-tab active" data-tab="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard
+                </button>
+                <button class="enlist-tab" data-tab="equipment">
+                    <i class="fas fa-tools"></i>
+                    Equipment
+                </button>
+                <button class="enlist-tab" data-tab="enlist">
+                    <i class="fas fa-plus-circle"></i>
+                    Enlist New
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="enlist-tab-content tab-dashboard active">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-tools"></i>
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Total Equipment</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-check-circle"></i>
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Available</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-clock"></i>
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Rented Out</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-wrench"></i>
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Maintenance</span>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label>Status:</label>
-                    <select id="filterStatus" class="filter-select">
-                        <option value="">All Status</option>
-                        <option value="available">Available</option>
-                        <option value="rented">Rented</option>
-                        <option value="maintenance">Maintenance</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Search:</label>
-                    <input type="text" id="searchEquipment" class="search-input" placeholder="Search by name or description">
-                </div>
-                <div class="filter-actions">
-                    <button type="button" class="btn-filter">
-                        <i class="fas fa-filter"></i> Filter
+                
+                <div class="dashboard-actions">
+                    <button type="button" class="dashboard-btn" onclick="switchTab('equipment')">
+                        <i class="fas fa-tools"></i>
+                        View All Equipment
                     </button>
-                    <button type="button" class="btn-clear">
-                        <i class="fas fa-times"></i> Clear
+                    <button type="button" class="dashboard-btn secondary" onclick="switchTab('enlist')">
+                        <i class="fas fa-plus-circle"></i>
+                        Add New Equipment
                     </button>
                 </div>
             </div>
 
-            <!-- Summary Bar -->
-            <div class="enlist-summary">
-                <div class="summary-item">
-                    <i class="fas fa-users"></i>
-                    <span>Equipment Management System</span>
+            <!-- Equipment Tab -->
+            <div id="equipment-tab" class="enlist-tab-content tab-equipment">
+                <!-- Filter and Search Section -->
+                <div class="enlist-filters">
+                    <div class="filter-group">
+                        <label>Category:</label>
+                        <select id="filterCategory" class="filter-select">
+                            <option value="">All Categories</option>
+                            <option value="construction">Construction</option>
+                            <option value="painting">Painting</option>
+                            <option value="gardening">Gardening</option>
+                            <option value="photography">Photography</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Status:</label>
+                        <select id="filterStatus" class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="available">Available</option>
+                            <option value="rented">Rented</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Search:</label>
+                        <input type="text" id="searchEquipment" class="search-input" placeholder="Search by name or description">
+                    </div>
+                    <div class="filter-actions">
+                        <button type="button" class="btn-filter">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button type="button" class="btn-clear">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <i class="fas fa-list"></i>
-                    <span>Total Equipment: 0</span>
+
+                <!-- Summary Bar -->
+                <div class="enlist-summary">
+                    <div class="summary-item">
+                        <i class="fas fa-users"></i>
+                        <span>Equipment Management System</span>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fas fa-list"></i>
+                        <span>Total Equipment: 0</span>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fas fa-eye"></i>
+                        <span>Showing: 0 of 0</span>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <i class="fas fa-eye"></i>
-                    <span>Showing: 0 of 0</span>
+
+                <!-- Equipment Table -->
+                <div class="enlist-table-container">
+                    <table class="enlist-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-tools"></i> Equipment Name</th>
+                                <th><i class="fas fa-info-circle"></i> Status</th>
+                                <th><i class="fas fa-cog"></i> Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipmentTableBody">
+                            <tr class="equipment-item">
+                                <td>
+                                    <div class="equipment-name">
+                                        <i class="fas fa-drill"></i>
+                                        <span>Professional Drill Set</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-available">Available</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-action btn-delete" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="equipment-item">
+                                <td>
+                                    <div class="equipment-name">
+                                        <i class="fas fa-ladder"></i>
+                                        <span>Extension Ladder</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-rented">Rented</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-action btn-delete" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="equipment-item">
+                                <td>
+                                    <div class="equipment-name">
+                                        <i class="fas fa-saw"></i>
+                                        <span>Circular Saw</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-maintenance">Maintenance</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-edit" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-action btn-delete" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- Equipment Table -->
-            <div class="enlist-table-container">
-                <table class="enlist-table">
-                    <thead>
-                        <tr>
-                            <th># ID</th>
-                            <th><i class="fas fa-user"></i> Equipment Name</th>
-                            <th><i class="fas fa-user"></i> Category</th>
-                            <th><i class="fas fa-tag"></i> Daily Rate</th>
-                            <th><i class="fas fa-phone"></i> Location</th>
-                            <th><i class="fas fa-cog"></i> Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="equipmentTableBody">
-                        <tr class="no-data">
-                            <td colspan="6">
-                                <div class="no-data-content">
-                                    <i class="fas fa-tools"></i>
-                                    <p>No equipment enlisted yet</p>
-                                    <button type="button" class="btn-add-first" onclick="showEnlistForm()">
-                                        <i class="fas fa-plus"></i> Enlist Your First Equipment
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Enlist Form (Hidden by default) -->
-            <div id="enlistFormContainer" class="enlist-form-container" style="display: none;">
+            <!-- Enlist Tab -->
+            <div id="enlist-tab" class="enlist-tab-content tab-enlist">
                 <div class="form-header">
                     <h3>Enlist New Equipment</h3>
-                    <button type="button" class="btn-close-form" onclick="hideEnlistForm()">
-                        <i class="fas fa-times"></i>
+                    <button type="button" class="btn-close-form" onclick="switchTab('equipment')">
+                        <i class="fas fa-arrow-left"></i> Back to Equipment
                     </button>
                 </div>
                 
@@ -588,7 +719,7 @@ session_start();
                     </div>
 
                     <div class="form-actions">
-                        <button type="button" class="btn-secondary" onclick="hideEnlistForm()">
+                        <button type="button" class="btn-secondary" onclick="switchTab('equipment')">
                             <i class="fas fa-times"></i> Cancel
                         </button>
                         <button type="submit" class="btn-primary">
@@ -600,8 +731,129 @@ session_start();
         </div>
     </div>
 
-    <script src="JS/main.js"></script>
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content product-modal">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            
+            <div class="product-modal-content">
+                <div class="product-modal-image">
+                    <div class="product-modal-placeholder">
+                        <i class="fas fa-tools" aria-hidden="true"></i>
+                    </div>
+                    <div class="product-badges">
+                        <span class="badge badge-available">Available</span>
+                        <span class="badge badge-featured">Featured</span>
+                    </div>
+                </div>
+                
+                <div class="product-modal-details">
+                    <div class="product-header">
+                        <h2 class="product-title">Professional Drill Set</h2>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-text">4.8 (24 reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="product-price-section">
+                        <div class="price-main">
+                            <span class="price-amount">$25</span>
+                            <span class="price-period">/day</span>
+                        </div>
+                        <div class="price-options">
+                            <span class="price-option">$150/week</span>
+                            <span class="price-option">$500/month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="product-description-full">
+                        <h3>Description</h3>
+                        <p>Professional-grade drill set perfect for construction, woodworking, and DIY projects. This comprehensive kit includes multiple drill bits, screwdriver attachments, and a carrying case for easy transport and storage.</p>
+                        
+                        <div class="product-features">
+                            <h4>Features</h4>
+                            <ul>
+                                <li><i class="fas fa-check"></i> 20V Lithium-ion battery</li>
+                                <li><i class="fas fa-check"></i> 15+ drill bits included</li>
+                                <li><i class="fas fa-check"></i> Variable speed control</li>
+                                <li><i class="fas fa-check"></i> LED work light</li>
+                                <li><i class="fas fa-check"></i> Ergonomic grip design</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="product-specs">
+                        <h4>Specifications</h4>
+                        <div class="specs-grid">
+                            <div class="spec-item">
+                                <span class="spec-label">Brand</span>
+                                <span class="spec-value">DeWalt</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Model</span>
+                                <span class="spec-value">DCD777C2</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Power Source</span>
+                                <span class="spec-value">Battery</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Weight</span>
+                                <span class="spec-value">3.4 lbs</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-location">
+                        <h4><i class="fas fa-map-marker-alt"></i> Location</h4>
+                        <p>Downtown Equipment Hub - 123 Main St, City, State</p>
+                        <span class="location-distance">2.3 miles away</span>
+                    </div>
+                    
+                    <div class="product-actions">
+                        <div class="rental-options">
+                            <div class="rental-dates">
+                                <div class="date-input">
+                                    <label for="startDate">Start Date</label>
+                                    <input type="date" id="startDate" min="">
+                                </div>
+                                <div class="date-input">
+                                    <label for="endDate">End Date</label>
+                                    <input type="date" id="endDate" min="">
+                                </div>
+                            </div>
+                            <div class="rental-summary">
+                                <span class="rental-days">0 days</span>
+                                <span class="rental-total">Total: $0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="addToCart()">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-secondary" onclick="chatWithSeller()">
+                                <i class="fas fa-comments"></i> Chat with Seller
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="JS/modal-utils.js"></script>
     <script src="JS/auth.js"></script>
+    <script src="JS/enlist-modal.js"></script>
+    <script src="JS/product-modal.js"></script>
+    <script src="JS/main.js"></script>
 </body>
 
 </html>

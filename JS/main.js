@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initMobileOptimizations();
     initTouchGestures();
     initPerformanceOptimizations();
+    initHeroCarousel();
 });
 
 // Mobile Navigation Toggle
@@ -25,7 +26,7 @@ function initMobileNavigation() {
             
             // Prevent body scroll when menu is open
             if (navMenu.classList.contains('active')) {
-                document.body.style.overflow = 'hidden';
+                document.body.classList.add('modal-open');
                 
                 // Ensure navbar background consistency when menu is open
                 const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -36,7 +37,7 @@ function initMobileNavigation() {
                 }
                 navbar.style.backdropFilter = 'blur(20px)';
             } else {
-                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
                 
                 // Restore scroll-based background
                 if (window.scrollY > 100) {
@@ -65,7 +66,7 @@ function initMobileNavigation() {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
-                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
                 
                 // Restore scroll-based background
                 if (window.scrollY > 100) {
@@ -93,7 +94,7 @@ function initMobileNavigation() {
             if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
-                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
                 
                 // Restore scroll-based background
                 if (window.scrollY > 100) {
@@ -121,7 +122,7 @@ function initMobileNavigation() {
             if (e.key === 'Escape' && navMenu.classList.contains('active')) {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
-                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
                 
                 // Restore scroll-based background
                 if (window.scrollY > 100) {
@@ -149,7 +150,7 @@ function initMobileNavigation() {
             if (window.innerWidth > 768) {
                 hamburger.classList.remove('active');
                 navMenu.classList.remove('active');
-                document.body.style.overflow = '';
+                document.body.classList.remove('modal-open');
                 
                 // Restore scroll-based background
                 if (window.scrollY > 100) {
@@ -287,11 +288,15 @@ function initProductInteractions() {
             });
         }
         
-        // Add click to view details (placeholder)
+        // Add click to view details
         card.addEventListener('click', function(e) {
             if (!e.target.classList.contains('btn-outline')) {
                 const productName = this.querySelector('h3').textContent;
-                showNotification(`Viewing details for ${productName}`);
+                const productDescription = this.querySelector('.product-description').textContent;
+                const productPrice = this.querySelector('.price').textContent;
+                const productRating = this.querySelector('.rating').textContent;
+                
+                openProductModal(productName, productDescription, productPrice, productRating);
             }
         });
         
@@ -548,7 +553,7 @@ function showNotification(message, type = 'info') {
         position: fixed;
         top: 90px;
         right: 20px;
-        background: ${type === 'success' ? '#10b981' : '#2563eb'};
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#2563eb'};
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 8px;
@@ -569,7 +574,7 @@ function showNotification(message, type = 'info') {
             top: 80px;
             left: 20px;
             right: 20px;
-            background: ${type === 'success' ? '#10b981' : '#2563eb'};
+            background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#2563eb'};
             color: white;
             padding: 1rem;
             border-radius: 8px;
@@ -704,3 +709,158 @@ const debouncedScrollHandler = debounce(function() {
 }, 10);
 
 window.addEventListener('scroll', debouncedScrollHandler);
+
+// Hero Carousel Functionality
+function initHeroCarousel() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dot');
+    let currentSlide = 0;
+    let autoPlayInterval;
+    
+    if (slides.length === 0) return;
+    
+    // Function to show a specific slide
+    function showSlide(index) {
+        // Remove active class from all slides and dots
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // Add active class to current slide and dot
+        slides[index].classList.add('active');
+        dots[index].classList.add('active');
+        
+        currentSlide = index;
+    }
+    
+    // Function to go to next slide
+    function nextSlide() {
+        const nextIndex = (currentSlide + 1) % slides.length;
+        showSlide(nextIndex);
+    }
+    
+    // Function to go to previous slide
+    function prevSlide() {
+        const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(prevIndex);
+    }
+    
+    // Add click event listeners to dots
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            showSlide(index);
+            resetAutoPlay();
+        });
+    });
+    
+    // Auto-play functionality
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    }
+    
+    function resetAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            startAutoPlay();
+        }
+    }
+    
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+        }
+    }
+    
+    // Start auto-play
+    startAutoPlay();
+    
+    // Pause auto-play on hover (desktop only)
+    if (window.innerWidth > 768) {
+        const heroSection = document.querySelector('.hero');
+        if (heroSection) {
+            heroSection.addEventListener('mouseenter', stopAutoPlay);
+            heroSection.addEventListener('mouseleave', startAutoPlay);
+        }
+    }
+    
+    // Touch/swipe support for mobile
+    let startX, startY, distX, distY;
+    const threshold = 50;
+    
+    const heroSection = document.querySelector('.hero');
+    if (heroSection) {
+        heroSection.addEventListener('touchstart', function(e) {
+            const touch = e.touches[0];
+            startX = touch.clientX;
+            startY = touch.clientY;
+        });
+        
+        heroSection.addEventListener('touchmove', function(e) {
+            if (!startX || !startY) return;
+            
+            const touch = e.touches[0];
+            distX = touch.clientX - startX;
+            distY = touch.clientY - startY;
+        });
+        
+        heroSection.addEventListener('touchend', function(e) {
+            if (!startX || !startY) return;
+            
+            if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > threshold) {
+                if (distX > 0) {
+                    // Swipe right - go to previous slide
+                    prevSlide();
+                } else {
+                    // Swipe left - go to next slide
+                    nextSlide();
+                }
+                resetAutoPlay();
+            }
+            
+            // Reset values
+            startX = startY = distX = distY = null;
+        });
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+            prevSlide();
+            resetAutoPlay();
+        } else if (e.key === 'ArrowRight') {
+            nextSlide();
+            resetAutoPlay();
+        }
+    });
+    
+    // Pause auto-play when page is not visible
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            stopAutoPlay();
+        } else {
+            startAutoPlay();
+        }
+    });
+    
+    // Responsive adjustments
+    function handleResize() {
+        if (window.innerWidth <= 768) {
+            // On mobile, reduce auto-play interval
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(nextSlide, 4000); // 4 seconds on mobile
+            }
+        } else {
+            // On desktop, normal interval
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(nextSlide, 5000); // 5 seconds on desktop
+            }
+        }
+    }
+    
+    // Handle window resize
+    window.addEventListener('resize', handleResize);
+    
+    // Initial resize call
+    handleResize();
+}

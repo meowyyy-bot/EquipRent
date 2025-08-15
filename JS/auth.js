@@ -1,19 +1,32 @@
 // Auth Modal JavaScript
 
+// Global variables for focus management
+let modalFocusableElements = [];
+let firstFocusableElement = null;
+let lastFocusableElement = null;
+
 // Modal functionality
 function openAuthModal() {
     const modal = document.getElementById('authModal');
     if (modal) {
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        document.body.classList.add('modal-open');
+        
+        // Prevent background scrolling
+        preventBackgroundScroll();
+        
+        // Set up focus management
+        setupModalFocus(modal);
         
         // Focus on first input
         setTimeout(() => {
-            const firstInput = modal.querySelector('input');
-            if (firstInput) {
-                firstInput.focus();
+            if (firstFocusableElement) {
+                firstFocusableElement.focus();
             }
         }, 100);
+        
+        // Add event listeners for focus trapping
+        addModalEventListeners(modal);
     }
 }
 
@@ -21,7 +34,13 @@ function closeAuthModal() {
     const modal = document.getElementById('authModal');
     if (modal) {
         modal.style.display = 'none';
-        document.body.style.overflow = '';
+        document.body.classList.remove('modal-open');
+        
+        // Restore background scrolling
+        restoreBackgroundScroll();
+        
+        // Remove event listeners
+        removeModalEventListeners(modal);
         
         // Reset forms
         resetForms();
@@ -44,6 +63,12 @@ function switchTab(tabName) {
     } else {
         document.querySelector('.tab-btn:last-child').classList.add('active');
         document.getElementById('registerForm').classList.add('active');
+    }
+    
+    // Re-setup focus management for the new form
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        setupModalFocus(modal);
     }
 }
 
@@ -190,92 +215,85 @@ function resetForms() {
     });
 }
 
+// Enhanced modal focus management
+function setupModalFocus(modal) {
+    // Get all focusable elements within the modal
+    modalFocusableElements = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    
+    if (modalFocusableElements.length > 0) {
+        firstFocusableElement = modalFocusableElements[0];
+        lastFocusableElement = modalFocusableElements[modalFocusableElements.length - 1];
+    }
+    
+    // Store the element that had focus before modal opened
+    modal.dataset.previousFocus = document.activeElement ? document.activeElement.id || 'body' : 'body';
+}
+
+function addModalEventListeners(modal) {
+    // Focus trap with Tab key
+    modal.addEventListener('keydown', handleModalKeydown);
+    
+    // Prevent clicks outside modal from closing it (unless clicking on backdrop)
+    modal.addEventListener('click', handleModalClick);
+    
+    // Handle window resize to ensure modal stays properly positioned
+    window.addEventListener('resize', () => handleModalResize(modal));
+}
+
+function removeModalEventListeners(modal) {
+    modal.removeEventListener('keydown', handleModalKeydown);
+    modal.removeEventListener('click', handleModalClick);
+    window.removeEventListener('resize', () => handleModalResize(modal));
+}
+
+function handleModalKeydown(event) {
+    if (event.key === 'Tab') {
+        if (event.shiftKey) {
+            // Shift + Tab: go to previous element
+            if (document.activeElement === firstFocusableElement) {
+                event.preventDefault();
+                lastFocusableElement.focus();
+            }
+        } else {
+            // Tab: go to next element
+            if (document.activeElement === lastFocusableElement) {
+                event.preventDefault();
+                firstFocusableElement.focus();
+            }
+        }
+    } else if (event.key === 'Escape') {
+        // Close modal on Escape
+        const modal = document.getElementById('authModal');
+        if (modal && modal.style.display === 'flex') {
+            closeAuthModal();
+        }
+    }
+}
+
+function handleModalClick(event) {
+    // Only close if clicking on the modal backdrop (not on modal content)
+    if (event.target === event.currentTarget) {
+        closeAuthModal();
+    }
+}
+
+function handleModalResize(modal) {
+    // Ensure modal stays centered and properly sized on window resize
+    if (modal.style.display === 'flex') {
+        // Force a reflow to ensure proper positioning
+        modal.style.display = 'none';
+        modal.offsetHeight; // Trigger reflow
+        modal.style.display = 'flex';
+    }
+}
+
 // Close modal when clicking outside
 document.addEventListener('click', function(event) {
     const modal = document.getElementById('authModal');
     if (event.target === modal) {
         closeAuthModal();
-    }
-});
-
-// Close modal on escape key
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape') {
-        const modal = document.getElementById('authModal');
-        if (modal && modal.style.display === 'flex') {
-            closeAuthModal();
-        }
-        const enlistModal = document.getElementById('enlistModal');
-        if (enlistModal && enlistModal.style.display === 'flex') {
-            closeEnlistModal();
-        }
-    }
-});
-
-// Enlist Modal Functions
-function openEnlistModal() {
-    const modal = document.getElementById('enlistModal');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        
-        // Focus on first input
-        setTimeout(() => {
-            const firstInput = modal.querySelector('input');
-            if (firstInput) {
-                firstInput.focus();
-            }
-        }, 100);
-    }
-}
-
-function closeEnlistModal() {
-    const modal = document.getElementById('enlistModal');
-    if (modal) {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
-        
-        // Reset form
-        const form = modal.querySelector('.enlist-form');
-        if (form) {
-            form.reset();
-        }
-        
-        // Show table view by default
-        hideEnlistForm();
-    }
-}
-
-// Enlist form functions
-function showEnlistForm() {
-    const formContainer = document.getElementById('enlistFormContainer');
-    const tableContainer = document.querySelector('.enlist-table-container');
-    
-    if (formContainer && tableContainer) {
-        formContainer.style.display = 'block';
-        tableContainer.style.display = 'none';
-    }
-}
-
-function hideEnlistForm() {
-    const formContainer = document.getElementById('enlistFormContainer');
-    const tableContainer = document.querySelector('.enlist-table-container');
-    
-    if (formContainer && tableContainer) {
-        formContainer.style.display = 'none';
-        tableContainer.style.display = 'block';
-    }
-}
-
-function submitEnlistForm() {
-    showEnlistForm();
-}
-
-// Close enlist modal when clicking outside
-document.addEventListener('click', function(event) {
-    const modal = document.getElementById('enlistModal');
-    if (event.target === modal) {
-        closeEnlistModal();
     }
 });
 
@@ -286,38 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (savedUsername) {
         updateLoginState(true, savedUsername);
     }
-    
-    // Initialize enlist modal functionality
-    initializeEnlistModal();
 });
-
-// Initialize enlist modal functionality
-function initializeEnlistModal() {
-    const filterCategory = document.getElementById('filterCategory');
-    const filterStatus = document.getElementById('filterStatus');
-    const searchInput = document.getElementById('searchEquipment');
-    const filterBtn = document.querySelector('.btn-filter');
-    const clearBtn = document.querySelector('.btn-clear');
-
-    if (filterBtn) {
-        filterBtn.addEventListener('click', function() {
-            // Implement filter logic here
-            console.log('Filtering by:', {
-                category: filterCategory ? filterCategory.value : '',
-                status: filterStatus ? filterStatus.value : '',
-                search: searchInput ? searchInput.value : ''
-            });
-        });
-    }
-
-    if (clearBtn) {
-        clearBtn.addEventListener('click', function() {
-            if (filterCategory) filterCategory.value = '';
-            if (filterStatus) filterStatus.value = '';
-            if (searchInput) searchInput.value = '';
-        });
-    }
-}
 
 // Notification system (if not already defined in main.js)
 if (typeof showNotification === 'undefined') {
