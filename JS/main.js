@@ -864,3 +864,57 @@ function initHeroCarousel() {
     // Initial resize call
     handleResize();
 }
+
+// Global functions
+function openAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.body.classList.add('modal-open');
+    }
+}
+
+function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
+}
+
+async function logout() {
+    try {
+        const response = await fetch('controller/logout.php', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            // Update global login status if we're on the browse page
+            if (window.updateLoginStatus) {
+                window.updateLoginStatus(false);
+            }
+            
+            // Redirect to homepage
+            window.location.href = data.redirect;
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+        // Fallback redirect
+        window.location.href = 'index.php';
+    }
+}
+
+function updateLoginStatus(isLoggedIn) {
+    // Update global login status
+    window.isUserLoggedIn = isLoggedIn;
+    
+    // Refresh equipment display to update button states if we're on the browse page
+    if (window.equipmentBrowser && window.equipmentBrowser.refreshEquipmentDisplay) {
+        window.equipmentBrowser.refreshEquipmentDisplay();
+    }
+}

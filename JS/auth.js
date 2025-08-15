@@ -90,73 +90,99 @@ function togglePassword(inputId) {
 }
 
 // Form handling
-function handleLogin(event) {
+async function handleLogin(event) {
     event.preventDefault();
     
     const formData = new FormData(event.target);
-    const username = formData.get('username');
-    const password = formData.get('password');
-    const remember = formData.get('remember');
+    formData.append('action', 'login');
     
-    // Basic validation
-    if (!username || !password) {
-        showNotification('Please fill in all fields', 'error');
-        return;
-    }
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
     
-    // Here you would typically send the data to your backend
-    // For demo purposes, let's simulate a successful login
-    if (username === 'admin' && password === 'password') {
-        showNotification('Login successful!', 'success');
-        closeAuthModal();
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+    
+    try {
+        const response = await fetch('controller/auth.php', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
         
-        // Update UI to show logged in state
-        updateLoginState(true, username);
-    } else {
-        showNotification('Invalid username or password', 'error');
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification(data.message || 'Login successful!', 'success');
+            closeAuthModal();
+            
+            // Update global login status if we're on the browse page
+            if (window.updateLoginStatus) {
+                window.updateLoginStatus(true);
+            }
+            
+            // Reload page to update navigation
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showNotification(data.error || 'Login failed', 'error');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showNotification('Network error. Please try again.', 'error');
+    } finally {
+        // Restore button state
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
     }
 }
 
-function handleRegister(event) {
+async function handleRegister(event) {
     event.preventDefault();
     
     const formData = new FormData(event.target);
-    const name = formData.get('name');
-    const username = formData.get('username');
-    const password = formData.get('password');
-    const confirmPassword = formData.get('confirmPassword');
-    const terms = formData.get('terms');
+    formData.append('action', 'register');
     
-    // Basic validation
-    if (!name || !username || !password || !confirmPassword) {
-        showNotification('Please fill in all fields', 'error');
-        return;
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+    
+    try {
+        const response = await fetch('controller/auth.php', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification(data.message || 'Account created successfully!', 'success');
+            
+            // Switch to login tab
+            switchTab('login');
+            
+            // Clear register form
+            event.target.reset();
+        } else {
+            showNotification(data.error || 'Registration failed', 'error');
+        }
+    } catch (error) {
+        console.error('Registration error:', error);
+        showNotification('Network error. Please try again.', 'error');
+    } finally {
+        // Restore button state
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
     }
-    
-    if (password !== confirmPassword) {
-        showNotification('Passwords do not match', 'error');
-        return;
-    }
-    
-    if (!terms) {
-        showNotification('You must agree to the terms and conditions', 'error');
-        return;
-    }
-    
-    if (password.length < 6) {
-        showNotification('Password must be at least 6 characters long', 'error');
-        return;
-    }
-    
-    // Here you would typically send the data to your backend
-    // For demo purposes, let's simulate a successful registration
-    showNotification('Account created successfully! You can now login.', 'success');
-    
-    // Switch to login tab
-    switchTab('login');
-    
-    // Clear register form
-    event.target.reset();
 }
 
 // Social login handlers

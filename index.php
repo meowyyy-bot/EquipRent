@@ -34,16 +34,23 @@ session_start();
                     <a href="#home" class="nav-link">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#products" class="nav-link">Browse</a>
+                    <a href="browse.php" class="nav-link">Browse</a>
                 </li>
                 <li class="nav-item">
                     <a href="about.php" class="nav-link">About</a>
                 </li>
                 <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
+                    <li class="nav-item">
+                        <a href="dashboard.php" class="nav-link">Dashboard</a>
+                    </li>
                     <li class="nav-item mobile-only">
-                        <a href="controller/logout.php" class="nav-link logout-link">
+                        <button onclick="logout()" class="nav-link logout-link">
                             <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
+                        </button>
+                    </li>
+                <?php else: ?>
+                    <li class="nav-item">
+                        <button class="nav-link" onclick="openAuthModal()">Login</button>
                     </li>
                 <?php endif; ?>
             </ul>
@@ -56,9 +63,9 @@ session_start();
                     <div class="user-menu desktop-only">
                         <span class="welcome-text">Welcome,
                             <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
-                        <a href="controller/logout.php" class="logout-btn">
+                        <button onclick="logout()" class="logout-btn">
                             <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
+                        </button>
                     </div>
                 <?php else: ?>
                     <button class="login-btn" onclick="openAuthModal()">Login</button>
@@ -96,7 +103,7 @@ session_start();
                 <p class="hero-subtitle">Access professional-grade equipment without the hefty price tag. Quality tools
                     for every project.</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary">Browse Equipment</button>
+                    <button class="btn btn-primary" onclick="window.location.href='browse.php'">Browse Equipment</button>
                     <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
                         <button class="btn btn-secondary" onclick="openEnlistModal()">Enlist Your Item</button>
                     <?php else: ?>
