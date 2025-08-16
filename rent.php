@@ -151,13 +151,9 @@ if ($equipment_id <= 0) {
 }
 
 // Get equipment details
-<<<<<<< Updated upstream
 $sql = "SELECT e.*, c.category_name, u.first_name, u.last_name, u.city, 
         COALESCE(u.average_rating, 0.00) as owner_rating, 
         COALESCE(u.total_reviews, 0) as total_reviews 
-=======
-$sql = "SELECT e.*, c.category_name, u.first_name, u.last_name, u.city, u.average_rating as owner_rating, u.total_reviews 
->>>>>>> Stashed changes
         FROM equipment e 
         JOIN categories c ON e.category_id = c.category_id 
         JOIN users u ON e.owner_id = u.user_id 
