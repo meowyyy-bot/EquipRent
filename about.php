@@ -44,20 +44,6 @@ session_start();
                     <h2>Our Story</h2>
                     <p>Founded in 2024, EquipRent was born from a simple observation: valuable equipment sits idle while others struggle to access the tools they need. We believe that sharing resources creates stronger, more sustainable communities.</p>
                     <p>What started as a local initiative has grown into a trusted platform connecting equipment owners with renters across the country. Our mission is to make professional-grade equipment accessible to everyone, from DIY enthusiasts to small businesses.</p>
-                    <div class="story-stats">
-                        <div class="stat-item">
-                            <span class="stat-number">10,000+</span>
-                            <span class="stat-label">Happy Customers</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">5,000+</span>
-                            <span class="stat-label">Equipment Items</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number">50+</span>
-                            <span class="stat-label">Cities Served</span>
-                        </div>
-                    </div>
                 </div>
                 <div class="story-image">
                     <div class="story-placeholder">
@@ -111,102 +97,10 @@ session_start();
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials">
-        <div class="container">
-            <h2 class="section-title">What Our Community Says</h2>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"EquipRent saved me hundreds on my home renovation project. The equipment was in perfect condition and the owner was incredibly helpful."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <i class="fas fa-user" aria-hidden="true"></i>
-                        </div>
-                        <div class="author-info">
-                            <h4>David Thompson</h4>
-                            <span>Homeowner</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"As a small contractor, I can't afford to buy all the equipment I need. EquipRent gives me access to professional tools without the investment."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <i class="fas fa-user" aria-hidden="true"></i>
-                        </div>
-                        <div class="author-info">
-                            <h4>Lisa Martinez</h4>
-                            <span>Contractor</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"I've been renting out my equipment for years and EquipRent makes it so easy. Great insurance coverage and excellent customer support."</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-avatar">
-                            <i class="fas fa-user" aria-hidden="true"></i>
-                        </div>
-                        <div class="author-info">
-                            <h4>Robert Kim</h4>
-                            <span>Equipment Owner</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>EquipRent</h3>
-                    <p>Your trusted partner for equipment rental needs.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Follow us on Facebook"><i class="fab fa-facebook"
-                                aria-hidden="true"></i></a>
-                        <a href="#" aria-label="Follow us on Twitter"><i class="fab fa-twitter"
-                                aria-hidden="true"></i></a>
-                        <a href="#" aria-label="Follow us on Instagram"><i class="fab fa-instagram"
-                                aria-hidden="true"></i></a>
-                        <a href="#" aria-label="Follow us on LinkedIn"><i class="fab fa-linkedin"
-                                aria-hidden="true"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.php#home">Home</a></li>
-                        <li><a href="index.php#products">Products</a></li>
-                        <li><a href="about.php">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Contact Support</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone" aria-hidden="true"></i> +1 (555) 123-4567</p>
-                    <p><i class="fas fa-envelope" aria-hidden="true"></i> info@equiprent.com</p>
-                    <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> 123 Equipment St, City, State</p>
-                </div>
-            </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 EquipRent. All rights reserved.</p>
             </div>
