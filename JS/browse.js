@@ -23,10 +23,24 @@ class EquipmentBrowser {
     }
     
     init() {
+        this.applyInitialFiltersFromUrl();
         this.loadCategories();
         this.bindEvents();
         this.loadEquipment();
         this.setupMobileNavigation();
+    }
+
+    applyInitialFiltersFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const categoryParam = params.get('category');
+        if (categoryParam) {
+            this.currentFilters.category = categoryParam;
+            // Pre-select dropdown if present (might be populated later)
+            const select = document.getElementById('categoryFilter');
+            if (select) {
+                select.value = categoryParam.toLowerCase();
+            }
+        }
     }
     
     bindEvents() {
@@ -204,6 +218,11 @@ class EquipmentBrowser {
             option.textContent = category.category_name;
             categoryFilter.appendChild(option);
         });
+        
+        // Re-apply initial selection if any
+        if (this.currentFilters.category) {
+            categoryFilter.value = this.currentFilters.category.toLowerCase();
+        }
     }
     
     async loadEquipment() {

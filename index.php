@@ -70,39 +70,52 @@ session_start();
         <div class="container">
             <h2 class="section-title">Popular Categories</h2>
             <div class="categories-grid">
-                <div class="category-item" tabindex="0" role="button" aria-label="Construction equipment category">
-                    <div class="category-icon">
-                        <i class="fas fa-hammer" aria-hidden="true"></i>
-                    </div>
-                    <div class="category-content">
-                        <h3>Construction</h3>
-                    </div>
-                </div>
-                <div class="category-item" tabindex="0" role="button" aria-label="Painting equipment category">
-                    <div class="category-icon">
-                        <i class="fas fa-paint-brush" aria-hidden="true"></i>
-                    </div>
-                    <div class="category-content">
-                        <h3>Painting</h3>
-                    </div>
-                </div>
-                <div class="category-item" tabindex="0" role="button" aria-label="Gardening equipment category">
-                    <div class="category-icon">
-                        <i class="fas fa-leaf" aria-hidden="true"></i>
-                    </div>
-                    <div class="category-content">
-                        <h3>Gardening</h3>
-                    </div>
-                </div>
-                <div class="category-item" tabindex="0" role="button" aria-label="Photography equipment category">
-                    <div class="category-icon">
-                        <i class="fas fa-camera" aria-hidden="true"></i>
-                    </div>
-                    <div class="category-content">
-                        <h3>Photography</h3>
-                    </div>
-                </div>
-            </div>
+				<?php
+					require_once __DIR__ . '/controller/db_connect.php';
+					$fetchedCategories = [];
+					try {
+						$result = $conn->query("SELECT category_name FROM categories WHERE is_active = 1 ORDER BY category_name LIMIT 8");
+						if ($result) {
+							while ($row = $result->fetch_assoc()) {
+								$fetchedCategories[] = $row['category_name'];
+							}
+						}
+					} catch (Exception $e) {
+						// ignore and fallback
+					}
+					
+					function getCategoryIconClass($name) {
+						$map = [
+							'Construction' => 'fas fa-hammer',
+							'Painting' => 'fas fa-paint-brush',
+							'Gardening' => 'fas fa-leaf',
+							'Photography' => 'fas fa-camera',
+							'Tools' => 'fas fa-tools',
+							'Kitchen Appliances' => 'fas fa-blender',
+							'Heavy Equipment' => 'fas fa-truck',
+							'Electronics' => 'fas fa-plug',
+						];
+						return $map[$name] ?? 'fas fa-box';
+					}
+					
+					if (count($fetchedCategories) === 0) {
+						$fetchedCategories = ['Construction','Painting','Gardening','Photography'];
+					}
+					
+					foreach ($fetchedCategories as $catName):
+						$iconClass = getCategoryIconClass($catName);
+						$url = 'browse.php?category=' . urlencode($catName);
+					?>
+					<div class="category-item" tabindex="0" role="button" aria-label="<?php echo htmlspecialchars($catName); ?> category" onclick="window.location.href='<?php echo $url; ?>'" title="View <?php echo htmlspecialchars($catName); ?> equipment">
+						<div class="category-icon">
+							<i class="<?php echo $iconClass; ?>" aria-hidden="true"></i>
+						</div>
+						<div class="category-content">
+							<h3><?php echo htmlspecialchars($catName); ?></h3>
+						</div>
+					</div>
+					<?php endforeach; ?>
+				</div>
         </div>
     </section>
 
