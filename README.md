@@ -1,77 +1,128 @@
-# hackathon
+# EquipRent — Equipment Rental Platform
 
-WIREFRAME
-https://www.figma.com/design/L1WsIp7H8ORrjy7otvuVPg/HACKATHON?node-id=0-1&t=oIdBrRJ80wc8QmMn-1
+EquipRent is a PHP/MySQL web app for renting tools and equipment. Users can register/login, browse listings with filters, enlist their own equipment, and create rental requests with simple availability checks and pricing.
 
-PROCESS
-The website will serve as a marketplace for renting tools and appliances (e.g., power drills, ladders, washing machines, generators, etc.) — either directly from the company’s own inventory or through peer-to-peer rentals.
+Wireframe/Design (Figma): https://www.figma.com/design/L1WsIp7H8ORrjy7otvuVPg/HACKATHON?node-id=0-1
 
-Key Features
-A. User Account System
-Two Roles:
-User, they can either rent out their tools or rent tools from other users
-Review & ratings system for both owners and borrowers.
+## Features
+- User authentication: register, login, logout (session based)
+- Browse equipment with search, filters, sort, and pagination
+- Enlist equipment (owners) with optional photo uploads
+- Rental flow with date validation and cost breakdown (daily rate + 5% platform fee)
+- Basic availability tracking per day
+- Responsive UI with modals and clean navigation
 
-B. Inventory & Listings
-Browse/Filter/Sort: By category (Tools, Kitchen Appliances, Heavy Equipment, etc.), brand, price per day, location, availability.
-Detailed product pages:
-Item description, rental price (hourly/daily/weekly/monthly), availability calendar.
-Images, condition status, replacement cost.
-Owner’s rating and past rentals.
-Real-time availability updates to prevent double-booking.
+## Tech Stack
+- PHP 8+ (XAMPP recommended)
+- MySQL/MariaDB
+- HTML/CSS/Vanilla JS (no framework)
+- Font Awesome for icons
 
-C. Booking & Payment
-Integrated Booking System:
-Date/time selection.
-Deposit handling (refundable upon safe return).
-Delivery/Pick-up options (additional fee if needed).
-Payment Gateway:
-Credit/debit cards, e-wallets (GCash, PayPal), bank transfers.
-Split payments (platform takes its cut before sending to the owner).
-Auto-Invoicing and receipts.
+## Prerequisites
+- XAMPP (Apache + MySQL) on Windows
+- PHP enabled in Apache
+- MySQL user with access to a database named `hackathondb`
 
-D. Logistics & Delivery
-Option to schedule pick-up.
-Partnerships with local couriers or gig-delivery services.
-Tracking system for deliveries.
+## Setup (Local)
+1) Move the project folder to your XAMPP `htdocs` directory, e.g.
+   `C:\xampp\htdocs\New folder\hackathin`
 
-E. Security & Verification
-Renter verification before allowing rentals (reduces theft risk).
-Rental agreement with terms & conditions signed digitally.
-Item condition photos before/after rental.
+2) Create database and schema
+   - Option A: Import the SQL dump
+     - Open phpMyAdmin → create database `hackathondb`
+     - Import `hackathondb (1).sql`
+   - Option B: Minimal setup for users table
+     - Visit `http://localhost/New%20folder/hackathin/controller/setup_db.php`
+       (creates `users` table and a test user)
 
-F. Communication & Notifications
-In-platform messaging between owner and renter.
-Email/SMS/app push notifications for booking confirmations, due date reminders, overdue alerts.
+3) Configure database connection
+   - Edit `controller/db_connect.php` if needed:
+     ```php
+     $servername = "localhost";
+     $username = "root";
+     $password = ""; // default for XAMPP
+     $dbname = "hackathondb";
+     ```
 
-G. Dispute & Support
-Support ticket system for disputes or item damage claims.
-Platform-mediated refunds & resolutions.
+4) Start Apache and MySQL in XAMPP.
 
-Profit Model
-Here’s how the website can make money:
-Commission on Rentals (primary revenue stream)
-Example: Platform takes 15% of each transaction before payout to the owner.
-Listing Fees (optional)
-Charge owners a small fee to list an item (similar to classifieds).
-Delivery Service Markup
-If the platform handles delivery, add a service fee.
-Late Return Fees (shared with item owner)
-Helps encourage timely returns while generating revenue.
-Damage Protection Plans
-Offer renters an optional insurance-like fee to cover damages (platform partners with an insurer or self-manages risk).
+5) Open the app
+   - `http://localhost/New%20folder/hackathin/`
+   - If your folder name differs, adjust the URL accordingly.
 
-Scalability & Future Enhancements
-Mobile App (iOS & Android) for ease of use. (Partially DONE)
-Loyalty Rewards Program — earn points for each rental.
-Data Analytics Dashboard for owners to track income, demand trends, and utilization.
-AI Recommendation Engine to suggest tools based on past rentals and seasonal demand.
-ADMIN SIDE!
+## Test Account
+If you used `controller/setup_db.php`, the script creates:
+- Email: `test@example.com`
+- Password: `password123`
 
-Tech Stack (Example)
-Frontend: .
-Backend: .
-Database: MySQL.
-Storage: phpmyadmin.
-Payments: PayMongo.
-Hosting: local.
+## Project Structure (high-level)
+```
+hackathin/
+  index.php                # Home page + auth/enlist modals
+  browse.php               # Browse/search equipment
+  rent.php                 # Rental checkout page
+  dashboard.php            # Placeholder dashboard
+  includes/navigation.php  # Shared navigation
+  controller/
+    db_connect.php         # DB connection
+    setup_db.php           # Creates users table + test user
+    auth.php               # Login/Register/Status (AJAX or form)
+    logout.php             # Session destroy (AJAX or redirect)
+    equipment.php          # Equipment API (browse/view/categories/availability)
+    enlist_item.php        # Owner equipment enlist (form post + uploads)
+    booking.php            # Create rental request
+  JS/                      # Frontend scripts (auth, browse, modals)
+  css/                     # Stylesheets
+```
+
+## How to Use
+- Home: browse categories, open auth or enlist modals
+- Register/Login: available on `index.php` and `browse.php` modals
+- Browse: `browse.php` supports search, filters, sorting, and pagination (via `controller/equipment.php?action=browse`)
+- Enlist: from the home modal → posts to `controller/enlist_item.php`
+- Rent: open `rent.php?equipment_id=...` when logged in → posts to `controller/booking.php`
+- Logout: via `controller/logout.php` (AJAX-safe)
+
+## Endpoints (server-side)
+- `controller/auth.php`
+  - POST `action=login` → sets session; JSON or redirect
+  - POST `action=register` → creates user; JSON or redirect
+  - GET `action=check_status` → `{ logged_in, user_id, username, email }`
+
+- `controller/equipment.php`
+  - GET `action=browse` → list equipment with filters: `category, location, min_price, max_price, search, sort, order, page, limit`
+  - GET `action=view&id=...` → details for one equipment (with availability + reviews)
+  - GET `action=categories` → active categories
+  - GET `action=availability&id=...&date=YYYY-MM-DD` → availability flag
+
+- `controller/booking.php`
+  - POST `action=create_rental` with: `equipment_id, start_date, end_date, pickup_location?, return_location?, special_instructions?`
+
+- `controller/logout.php`
+  - GET → destroys session; JSON when requested with `X-Requested-With: XMLHttpRequest`
+
+## Notes on Data Model
+There are two paths in this repo used during development:
+- `enlist_item.php` creates a simple `equipment` table on first use (owner_id, item_name, category, daily_rate, ...)
+- `equipment.php` expects a richer schema with `categories` and more user fields (as in the SQL dump)
+
+If you use only `enlist_item.php`, browsing via `equipment.php` filters may require aligning column names or importing the full SQL dump. For a complete demo experience, prefer importing `hackathondb (1).sql`.
+
+## File Uploads
+Enlisting can upload images to `uploads/equipment/`.
+- Ensure Apache/PHP can write to that directory
+- Adjust `upload_max_filesize` / `post_max_size` in `php.ini` if needed
+
+## Troubleshooting
+- Blank or error on login/register: verify DB connection in `controller/db_connect.php` and that the `users` table exists (use `setup_db.php`).
+- Browse shows no data: seed the database by importing `hackathondb (1).sql` or create equipment that matches the expected schema.
+- Cannot upload images: create `uploads/equipment/` with write permissions and increase PHP upload limits if necessary.
+- Redirect paths on Windows: spaces in `New folder` become `%20` in URLs (use `New%20folder`).
+
+## Security
+- Passwords are hashed using `password_hash`
+- Sessions are used for authentication; avoid outputting debug in production
+
+## License
+No license specified. Add one if you plan to publish.
+
