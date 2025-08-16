@@ -49,9 +49,9 @@ session_start();
                     <div class="user-menu">
                         <span class="welcome-text">Welcome,
                             <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
-                        <a href="controller/logout.php" class="logout-btn">
+                        <button onclick="logout()" class="logout-btn">
                             <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
+                        </button>
                     </div>
                 <?php else: ?>
                     <button class="login-btn" onclick="openAuthModal()">Login</button>

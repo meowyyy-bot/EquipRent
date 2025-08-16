@@ -783,7 +783,7 @@ async function logout() {
     } catch (error) {
         console.error('Logout error:', error);
         // Fallback redirect
-        window.location.href = 'index.php';
+        window.location.href = '/New folder/hackathin/index.php';
     }
 }
 

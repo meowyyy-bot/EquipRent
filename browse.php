@@ -31,9 +31,9 @@ session_start();
                 </li>
                 <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
                     <li class="nav-item mobile-only">
-                        <a href="controller/logout.php" class="nav-link logout-link">
+                        <button onclick="logout()" class="nav-link logout-link">
                             <i class="fas fa-sign-out-alt"></i> Logout
-                        </a>
+                        </button>
                     </li>
                 <?php endif; ?>
             </ul>

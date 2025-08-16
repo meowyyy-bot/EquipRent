@@ -16,12 +16,12 @@ if ($isAjax) {
     echo json_encode([
         'success' => true,
         'message' => 'Logged out successfully',
-        'redirect' => '../index.php'
+        'redirect' => '/New folder/hackathin/index.php'
     ]);
     exit;
 }
 
 // Redirect to home page for regular requests
-header("Location: ../index.php");
+header("Location: /New folder/hackathin/index.php");
 exit();
 ?>

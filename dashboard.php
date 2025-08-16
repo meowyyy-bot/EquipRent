@@ -282,9 +282,9 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             <div class="nav-actions">
                 <div class="user-menu">
                     <span class="welcome-text">Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
-                    <a href="controller/logout.php" class="logout-btn">
+                    <button onclick="logout()" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -607,6 +607,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 
     <script src="JS/modal-utils.js"></script>
     <script src="JS/enlist-modal.js"></script>
+    <script src="JS/main.js"></script>
     <script>
         // Dashboard functionality
         class Dashboard {

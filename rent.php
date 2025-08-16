@@ -146,7 +146,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
                 } catch (error) {
                     console.error('Logout error:', error);
                     // Fallback redirect
-                    window.location.href = 'index.php';
+                    window.location.href = '/New folder/hackathin/index.php';
                 }
             }
         </script>
