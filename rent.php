@@ -151,9 +151,13 @@ if ($equipment_id <= 0) {
 }
 
 // Get equipment details
+<<<<<<< Updated upstream
 $sql = "SELECT e.*, c.category_name, u.first_name, u.last_name, u.city, 
         COALESCE(u.average_rating, 0.00) as owner_rating, 
         COALESCE(u.total_reviews, 0) as total_reviews 
+=======
+$sql = "SELECT e.*, c.category_name, u.first_name, u.last_name, u.city, u.average_rating as owner_rating, u.total_reviews 
+>>>>>>> Stashed changes
         FROM equipment e 
         JOIN categories c ON e.category_id = c.category_id 
         JOIN users u ON e.owner_id = u.user_id 
@@ -664,7 +668,23 @@ $stmt->close();
                     body: formData
                 });
                 
-                const data = await response.json();
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    throw new Error('Invalid JSON response from server');
+                }
                 
                 if (data.success) {
                     // Show success message
@@ -678,8 +698,8 @@ $stmt->close();
                     showMessage('error', data.error || 'Failed to create rental request');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showMessage('error', 'Network error. Please try again.');
+                console.error('Detailed error:', error);
+                showMessage('error', `Network error: ${error.message}`);
             } finally {
                 // Restore button state
                 submitBtn.disabled = false;

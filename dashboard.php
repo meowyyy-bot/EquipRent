@@ -16,6 +16,23 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/browse.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-header div h1 {
+            margin: 0;
+        }
+        
+        .dashboard-header div p {
+            margin: 0.5rem 0 0 0;
+            color: #6c757d;
+        }
+    </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
 </head>
@@ -24,8 +41,13 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
 
     <div class="dashboard-container">
         <div class="dashboard-header">
-            <h1>Welcome to Your Dashboard</h1>
-            <p>Manage your equipment rentals and listings</p>
+            <div>
+                <h1>Welcome to Your Dashboard</h1>
+                <p>Manage your equipment rentals and listings</p>
+            </div>
+            <button class="dashboard-btn outline" onclick="refreshDashboard()" title="Refresh Data">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
         </div>
 
         <div class="dashboard-grid">
@@ -223,25 +245,10 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                             </tr>
                         </thead>
                         <tbody id="equipmentTableBody">
-                            <tr class="equipment-item">
-                                <td>
-                                    <div class="equipment-name">
-                                        <i class="fas fa-drill"></i>
-                                        <span>Professional Drill Set</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span class="status-badge status-available">Available</span>
-                                </td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn-action btn-edit" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="btn-action btn-delete" title="Delete">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
+                            <tr>
+                                <td colspan="3" style="text-align: center; padding: 2rem;">
+                                    <i class="fas fa-tools" style="font-size: 2rem; color: #6c757d; margin-bottom: 1rem;"></i>
+                                    <p>No equipment found</p>
                                 </td>
                             </tr>
                         </tbody>
@@ -257,7 +264,7 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                     </button>
                 </div>
                 
-                <form class="enlist-form" method="POST" action="controller/enlist_item.php">
+                <form class="enlist-form" id="enlistEquipmentForm" method="POST">
                     <div class="form-section">
                         <h4>Basic Information</h4>
                         <div class="form-grid">
@@ -270,11 +277,16 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                                 <label for="itemCategory">Category</label>
                                 <select id="itemCategory" name="category" required>
                                     <option value="">Select Category</option>
-                                    <option value="construction">Construction</option>
-                                    <option value="painting">Painting</option>
-                                    <option value="gardening">Gardening</option>
-                                    <option value="photography">Photography</option>
-                                    <option value="other">Other</option>
+                                    <option value="construction">Tools</option>
+                                    <option value="kitchen">Kitchen Appliances</option>
+                                    <option value="heavy_equipment">Heavy Equipment</option>
+                                    <option value="electronics">Electronics</option>
+                                    <option value="furniture">Furniture</option>
+                                    <option value="gardening">Garden & Outdoor</option>
+                                    <option value="sports">Sports Equipment</option>
+                                    <option value="party">Party & Events</option>
+                                    <option value="cleaning">Cleaning Equipment</option>
+                                    <option value="medical">Medical Equipment</option>
                                 </select>
                             </div>
                         </div>
@@ -360,19 +372,52 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                     if (data.success) {
                         this.displayRentals(data.data);
                         this.updateRentalStats(data.data);
+                    } else {
+                        console.error('Failed to load rentals:', data.error);
                     }
                 } catch (error) {
                     console.error('Failed to load rentals:', error);
+                }
+                
+                // Also load rental stats
+                try {
+                    const response = await fetch('controller/booking.php?action=rental_stats');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.updateRentalStatsFromAPI(data.data);
+                    }
+                } catch (error) {
+                    console.error('Failed to load rental stats:', error);
                 }
             }
             
             async loadEquipment() {
                 try {
-                    // This would load user's own equipment
-                    // For now, we'll show placeholder data
-                    this.displayEquipment([]);
+                    const response = await fetch('controller/booking.php?action=my_equipment');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.displayEquipment(data.data);
+                        this.updateEquipmentStats(data.data);
+                        this.updateEquipmentTable(data.data);
+                    } else {
+                        console.error('Failed to load equipment:', data.error);
+                    }
                 } catch (error) {
                     console.error('Failed to load equipment:', error);
+                }
+                
+                // Also load equipment stats
+                try {
+                    const response = await fetch('controller/booking.php?action=equipment_stats');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.updateEquipmentStatsFromAPI(data.data);
+                    }
+                } catch (error) {
+                    console.error('Failed to load equipment stats:', error);
                 }
             }
             
@@ -397,8 +442,9 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                     rentalHTML += `
                         <div class="rental-item">
                             <div class="rental-info">
-                                <h4>${rental.item_name}</h4>
+                                <h4>${rental.equipment_name}</h4>
                                 <p>${startDate} - ${endDate} • ${rental.total_price_formatted}</p>
+                                <small>Owner: ${rental.owner_name} (${rental.owner_city})</small>
                             </div>
                             <span class="rental-status status-${rental.rental_status}">
                                 ${rental.rental_status}
@@ -429,8 +475,9 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
                     equipmentHTML += `
                         <div class="rental-item">
                             <div class="rental-info">
-                                <h4>${item.item_name}</h4>
+                                <h4>${item.name}</h4>
                                 <p>${item.daily_rate_formatted}/day • ${item.location}</p>
+                                <small>${item.category_name} • ${item.total_rentals} rental(s)</small>
                             </div>
                             <span class="rental-status status-${item.status}">
                                 ${item.status}
@@ -444,12 +491,94 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             
             updateRentalStats(rentals) {
                 const total = rentals.length;
-                const active = rentals.filter(r => ['confirmed', 'ongoing'].includes(r.rental_status)).length;
+                const active = rentals.filter(r => ['confirmed', 'active'].includes(r.rental_status)).length;
                 const pending = rentals.filter(r => r.rental_status === 'pending').length;
                 
                 document.getElementById('totalRentals').textContent = total;
                 document.getElementById('activeRentals').textContent = active;
                 document.getElementById('pendingRentals').textContent = pending;
+            }
+            
+            updateRentalStatsFromAPI(stats) {
+                document.getElementById('totalRentals').textContent = stats.total_rentals;
+                document.getElementById('activeRentals').textContent = stats.active_rentals;
+                document.getElementById('pendingRentals').textContent = stats.pending_rentals;
+            }
+            
+            updateEquipmentStats(equipment) {
+                const total = equipment.length;
+                const available = equipment.filter(e => e.status === 'available').length;
+                const rented = equipment.filter(e => e.status === 'rented').length;
+                
+                document.getElementById('totalEquipment').textContent = total;
+                document.getElementById('availableEquipment').textContent = available;
+                document.getElementById('rentedEquipment').textContent = rented;
+            }
+            
+            updateEquipmentStatsFromAPI(stats) {
+                document.getElementById('totalEquipment').textContent = stats.total_equipment;
+                document.getElementById('availableEquipment').textContent = stats.available_equipment;
+                document.getElementById('rentedEquipment').textContent = stats.rented_equipment;
+                
+                // Update modal stats too
+                const modalStats = document.querySelectorAll('.dashboard-stats .stat-number');
+                if (modalStats.length >= 4) {
+                    modalStats[0].textContent = stats.total_equipment;
+                    modalStats[1].textContent = stats.available_equipment;
+                    modalStats[2].textContent = stats.rented_equipment;
+                    modalStats[3].textContent = stats.maintenance_equipment;
+                }
+            }
+            
+            updateEquipmentTable(equipment) {
+                const tableBody = document.getElementById('equipmentTableBody');
+                
+                if (equipment.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 2rem;">
+                                <i class="fas fa-tools" style="font-size: 2rem; color: #6c757d; margin-bottom: 1rem;"></i>
+                                <p>No equipment found</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                let tableHTML = '';
+                equipment.forEach(item => {
+                    const statusClass = item.status === 'available' ? 'status-available' : 
+                                       item.status === 'rented' ? 'status-rented' : 'status-maintenance';
+                    
+                    tableHTML += `
+                        <tr class="equipment-item">
+                            <td>
+                                <div class="equipment-name">
+                                    <i class="fas fa-tools"></i>
+                                    <div>
+                                        <strong>${item.name}</strong>
+                                        <small>${item.category_name} • ${item.daily_rate_formatted}/day</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge ${statusClass}">${item.status}</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action btn-edit" title="Edit" onclick="editEquipment(${item.equipment_id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-action btn-delete" title="Delete" onclick="deleteEquipment(${item.equipment_id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                tableBody.innerHTML = tableHTML;
             }
         }
         
@@ -496,10 +625,153 @@ if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
             }
         }
         
-        function submitEnlistForm() {
-            const form = document.querySelector('.enlist-form');
-            if (form) {
-                form.submit();
+        async function submitEnlistForm() {
+            const form = document.getElementById('enlistEquipmentForm');
+            if (!form) return;
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            try {
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enlisting...';
+                
+                const formData = new FormData(form);
+                
+                const response = await fetch('controller/enlist_item.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('success', data.message);
+                    form.reset();
+                    switchTab('equipment');
+                    
+                    // Reload equipment data
+                    const dashboard = new Dashboard();
+                    dashboard.loadEquipment();
+                } else {
+                    showMessage('error', data.error || 'Failed to enlist equipment');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('error', 'Network error. Please try again.');
+            } finally {
+                // Restore button state
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        }
+        
+        function showMessage(type, message) {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            // Create message element
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${type}`;
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            // Add styles
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 400px;
+                font-weight: 500;
+            `;
+            
+            document.body.appendChild(messageDiv);
+            
+            // Animate in
+            setTimeout(() => {
+                messageDiv.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                messageDiv.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (messageDiv.parentNode) {
+                        messageDiv.parentNode.removeChild(messageDiv);
+                    }
+                }, 300);
+            }, 5000);
+        }
+        
+        function refreshDashboard() {
+            const refreshBtn = document.querySelector('.dashboard-header button');
+            const icon = refreshBtn.querySelector('i');
+            
+            // Add spin animation
+            icon.classList.add('fa-spin');
+            refreshBtn.disabled = true;
+            
+            // Refresh all data
+            const dashboard = new Dashboard();
+            dashboard.init();
+            
+            // Remove spin animation after 1 second
+            setTimeout(() => {
+                icon.classList.remove('fa-spin');
+                refreshBtn.disabled = false;
+                showMessage('success', 'Dashboard refreshed successfully!');
+            }, 1000);
+        }
+        
+        function editEquipment(equipmentId) {
+            // For now, just show an alert - can be expanded later
+            showMessage('info', 'Edit functionality coming soon!');
+        }
+        
+        async function deleteEquipment(equipmentId) {
+            if (!confirm('Are you sure you want to delete this equipment? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('controller/equipment.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        equipment_id: equipmentId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage('success', 'Equipment deleted successfully');
+                    // Reload equipment data
+                    const dashboard = new Dashboard();
+                    dashboard.loadEquipment();
+                } else {
+                    showMessage('error', data.error || 'Failed to delete equipment');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('error', 'Network error. Please try again.');
             }
         }
         
