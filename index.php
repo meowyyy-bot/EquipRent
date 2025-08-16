@@ -39,20 +39,6 @@ session_start();
                 <li class="nav-item">
                     <a href="about.php" class="nav-link">About</a>
                 </li>
-                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                    <li class="nav-item">
-                        <a href="dashboard.php" class="nav-link">Dashboard</a>
-                    </li>
-                    <li class="nav-item mobile-only">
-                        <button onclick="logout()" class="nav-link logout-link">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </li>
-                <?php else: ?>
-                    <li class="nav-item">
-                        <button class="nav-link" onclick="openAuthModal()">Login</button>
-                    </li>
-                <?php endif; ?>
             </ul>
             <div class="nav-actions">
                 <button class="search-btn" aria-label="Search equipment"><i class="fas fa-search"></i></button>
@@ -247,46 +233,6 @@ session_start();
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>EquipRent</h3>
-                    <p>Your trusted partner for equipment rental needs.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Follow us on Facebook"><i class="fab fa-facebook"
-                                aria-hidden="true"></i></a>
-                        <a href="#" aria-label="Follow us on Twitter"><i class="fab fa-twitter"
-                                aria-hidden="true"></i></a>
-                        <a href="#" aria-label="Follow us on Instagram"><i class="fab fa-instagram"
-                                aria-hidden="true"></i></a>
-                        <a href="#" aria-label="Follow us on LinkedIn"><i class="fab fa-linkedin"
-                                aria-hidden="true"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#products">Products</a></li>
-                        <li><a href="about.php">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Contact Support</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone" aria-hidden="true"></i> +1 (555) 123-4567</p>
-                    <p><i class="fas fa-envelope" aria-hidden="true"></i> info@equiprent.com</p>
-                    <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> 123 Equipment St, City, State</p>
-                </div>
-            </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 EquipRent. All rights reserved.</p>
             </div>
@@ -314,14 +260,12 @@ session_start();
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
                         <div class="input-wrapper">
-                            <i class="fas fa-envelope"></i>
                             <input type="email" id="loginEmail" name="email" placeholder="Email">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Password</label>
                         <div class="input-wrapper">
-                            <i class="fas fa-lock"></i>
                             <input type="password" id="loginPassword" placeholder="Password" name="password" required >
                             <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
                                 <i class="fas fa-eye"></i>
