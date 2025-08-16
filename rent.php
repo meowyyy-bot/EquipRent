@@ -77,25 +77,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
         </style>
     </head>
     <body>
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <h2>EquipRent</h2>
-                </div>
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="index.php" class="nav-link">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="browse.php" class="nav-link">Browse</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="about.php" class="nav-link">About</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <?php include 'includes/navigation.php'; ?>
 
         <div class="login-required-container">
             <div class="login-icon">
@@ -389,33 +371,7 @@ $stmt->close();
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2>EquipRent</h2>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="index.php" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="browse.php" class="nav-link">Browse</a>
-                </li>
-                <li class="nav-item">
-                    <a href="about.php" class="nav-link">About</a>
-                </li>
-            </ul>
-            <div class="nav-actions">
-                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                    <span class="welcome-text">Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
-                    <button onclick="logout()" class="logout-btn">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                <?php endif; ?>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/navigation.php'; ?>
 
     <div class="rent-container">
         <div class="rent-header">

@@ -13,54 +13,7 @@ session_start();
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2>EquipRent</h2>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="index.php" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="browse.php" class="nav-link active">Browse</a>
-                </li>
-                <li class="nav-item">
-                    <a href="about.php" class="nav-link">About</a>
-                </li>
-                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                    <li class="nav-item mobile-only">
-                        <button onclick="logout()" class="nav-link logout-link">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </li>
-                <?php endif; ?>
-            </ul>
-            <div class="nav-actions">
-                <button class="search-btn" aria-label="Search equipment"><i class="fas fa-search"></i></button>
-                <button class="cart-btn" aria-label="View cart"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></button>
-                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                    <span class="welcome-text-mobile mobile-only">Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
-                    <div class="user-menu desktop-only">
-                        <span class="welcome-text">Welcome, <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
-                        <button onclick="logout()" class="logout-btn">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </div>
-                <?php else: ?>
-                    <button onclick="openAuthModal()" class="login-btn">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </button>
-                <?php endif; ?>
-            </div>
-            <div class="hamburger" aria-label="Toggle navigation menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/navigation.php'; ?>
 
     <!-- Browse Header -->
     <section class="browse-header">
@@ -373,42 +326,6 @@ session_start();
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>EquipRent</h3>
-                    <p>Your trusted partner for equipment rental needs.</p>
-                    <div class="social-links">
-                        <a href="#" aria-label="Follow us on Facebook"><i class="fab fa-facebook"></i></a>
-                        <a href="#" aria-label="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="#" aria-label="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="Follow us on LinkedIn"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="index.php">Home</a></li>
-                        <li><a href="browse.php">Browse</a></li>
-                        <li><a href="about.php">About</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Contact Support</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone"></i> +63 (2) 1234-5678</p>
-                    <p><i class="fas fa-envelope"></i> info@equiprent.ph</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Metro Manila, Philippines</p>
-                </div>
-            </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 EquipRent. All rights reserved.</p>
             </div>

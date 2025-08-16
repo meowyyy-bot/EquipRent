@@ -24,46 +24,7 @@ session_start();
 </head>
 
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2>EquipRent</h2>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="index.php#home" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="index.php#products" class="nav-link">Browse</a>
-                </li>
-                <li class="nav-item">
-                    <a href="about.php" class="nav-link active">About</a>
-                </li>
-            </ul>
-            <div class="nav-actions">
-                <button class="search-btn" aria-label="Search equipment"><i class="fas fa-search"></i></button>
-                <button class="cart-btn" aria-label="View cart"><i class="fas fa-shopping-cart"></i><span
-                        class="cart-count">0</span></button>
-                <?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']): ?>
-                    <div class="user-menu">
-                        <span class="welcome-text">Welcome,
-                            <?php echo htmlspecialchars($_SESSION['username'] ?? $_SESSION['full_name']); ?>!</span>
-                        <button onclick="logout()" class="logout-btn">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
-                    </div>
-                <?php else: ?>
-                    <button class="login-btn" onclick="openAuthModal()">Login</button>
-                <?php endif; ?>
-            </div>
-            <div class="hamburger" aria-label="Toggle navigation menu">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
+    <?php include 'includes/navigation.php'; ?>
 
     <!-- About Hero Section -->
     <section class="about-hero">
