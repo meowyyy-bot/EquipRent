@@ -664,7 +664,23 @@ $stmt->close();
                     body: formData
                 });
                 
-                const data = await response.json();
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    throw new Error('Invalid JSON response from server');
+                }
                 
                 if (data.success) {
                     // Show success message
@@ -678,8 +694,8 @@ $stmt->close();
                     showMessage('error', data.error || 'Failed to create rental request');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showMessage('error', 'Network error. Please try again.');
+                console.error('Detailed error:', error);
+                showMessage('error', `Network error: ${error.message}`);
             } finally {
                 // Restore button state
                 submitBtn.disabled = false;

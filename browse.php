@@ -112,7 +112,7 @@ session_start();
                             <option value="daily_rate-ASC">Price: Low to High</option>
                             <option value="daily_rate-DESC">Price: High to Low</option>
                             <option value="owner_rating-DESC">Highest Rated</option>
-                            <option value="item_name-ASC">Name: A to Z</option>
+                            <option value="name-ASC">Name: A to Z</option>
                         </select>
                     </div>
 
