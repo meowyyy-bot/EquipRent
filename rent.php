@@ -300,16 +300,73 @@ $stmt->close();
         }
         
         .rental-summary {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 8px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 1.75rem;
+            border-radius: 12px;
             margin: 1.5rem 0;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .rental-summary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.06), 0 3px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .rental-summary h4 {
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .rental-summary h4::before {
+            content: "📋";
+            font-size: 1.1rem;
         }
         
         .summary-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.5rem;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            transition: all 0.15s ease-in-out;
+        }
+        
+        .summary-row:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: #cbd5e1;
+        }
+        
+        .summary-row:last-child {
+            margin-bottom: 0;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-color: #93c5fd;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        
+        .summary-row span:first-child {
+            color: #475569;
+            font-weight: 500;
+        }
+        
+        .summary-row span:last-child {
+            color: #1e293b;
+            font-weight: 600;
+        }
+        
+        .summary-row:last-child span {
+            color: #1e40af;
+            font-weight: 700;
         }
         
         .summary-row.total {
