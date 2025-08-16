@@ -1,4 +1,8 @@
 <?php
+// Suppress warnings to prevent them from corrupting JSON responses
+error_reporting(E_ERROR | E_PARSE);
+ini_set('display_errors', 0);
+
 session_start();
 require_once 'controller/db_connect.php';
 
@@ -147,7 +151,9 @@ if ($equipment_id <= 0) {
 }
 
 // Get equipment details
-$sql = "SELECT e.*, c.category_name, u.first_name, u.last_name, u.city, u.average_rating as owner_rating 
+$sql = "SELECT e.*, c.category_name, u.first_name, u.last_name, u.city, 
+        COALESCE(u.average_rating, 0.00) as owner_rating, 
+        COALESCE(u.total_reviews, 0) as total_reviews 
         FROM equipment e 
         JOIN categories c ON e.category_id = c.category_id 
         JOIN users u ON e.owner_id = u.user_id 
@@ -368,6 +374,70 @@ $stmt->close();
                 flex-direction: column;
             }
         }
+        
+        /* Reviews Section Styles */
+        .reviews-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .reviews-section h4 {
+            margin: 0 0 1rem 0;
+            color: #212529;
+            font-size: 1.1rem;
+        }
+        
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .review-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .reviewer-name {
+            font-weight: 500;
+            color: #212529;
+        }
+        
+        .review-rating {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .review-comment {
+            margin: 0.5rem 0;
+            color: #495057;
+            line-height: 1.4;
+        }
+        
+        .review-date {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+        
+        .no-reviews {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px dashed #dee2e6;
+        }
     </style>
 </head>
 <body>
@@ -410,13 +480,64 @@ $stmt->close();
                     </div>
                     
                     <div class="pricing">
-                        <div class="price-main">₱<?php echo number_format($equipment['daily_rate'], 2); ?> /day</div>
-                        <?php if ($equipment['weekly_rate']): ?>
+                        <div class="price-main">₱<?php echo number_format($equipment['daily_rate'] ?? 0, 2); ?> /day</div>
+                        <?php if (isset($equipment['weekly_rate']) && $equipment['weekly_rate']): ?>
                             <div>₱<?php echo number_format($equipment['weekly_rate'], 2); ?> /week</div>
                         <?php endif; ?>
-                        <?php if ($equipment['monthly_rate']): ?>
+                        <?php if (isset($equipment['monthly_rate']) && $equipment['monthly_rate']): ?>
                             <div>₱<?php echo number_format($equipment['monthly_rate'], 2); ?> /month</div>
                         <?php endif; ?>
+                    </div>
+                    
+                    <!-- Reviews Section -->
+                    <div class="reviews-section">
+                        <h4>Reviews</h4>
+                        <?php
+                        // Get reviews for this equipment
+                        $reviews_sql = "SELECT r.rating, r.comment, r.created_at, u.first_name, u.last_name 
+                                       FROM reviews r 
+                                       JOIN users u ON r.reviewer_id = u.user_id 
+                                       WHERE r.rental_id IN (
+                                           SELECT rental_id FROM rentals WHERE equipment_id = ?
+                                       ) 
+                                       ORDER BY r.created_at DESC 
+                                       LIMIT 5";
+                        
+                        $reviews_stmt = $conn->prepare($reviews_sql);
+                        if ($reviews_stmt) {
+                            $reviews_stmt->bind_param("i", $equipment_id);
+                            $reviews_stmt->execute();
+                            $reviews_result = $reviews_stmt->get_result();
+                            
+                            if ($reviews_result->num_rows > 0) {
+                                echo '<div class="reviews-list">';
+                                while ($review = $reviews_result->fetch_assoc()) {
+                                    echo '<div class="review-item">';
+                                    echo '<div class="review-header">';
+                                    echo '<span class="reviewer-name">' . htmlspecialchars($review['first_name'] . ' ' . $review['last_name']) . '</span>';
+                                    echo '<span class="review-rating">';
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        if ($i <= $review['rating']) {
+                                            echo '<i class="fas fa-star" style="color: #ffc107;"></i>';
+                                        } else {
+                                            echo '<i class="far fa-star" style="color: #e4e5e9;"></i>';
+                                        }
+                                    }
+                                    echo '</span>';
+                                    echo '</div>';
+                                    echo '<p class="review-comment">' . htmlspecialchars($review['comment']) . '</p>';
+                                    echo '<small class="review-date">' . date('M j, Y', strtotime($review['created_at'])) . '</small>';
+                                    echo '</div>';
+                                }
+                                echo '</div>';
+                            } else {
+                                echo '<p class="no-reviews">No reviews yet. Be the first to review this equipment!</p>';
+                            }
+                            $reviews_stmt->close();
+                        } else {
+                            echo '<p class="no-reviews">Unable to load reviews at this time.</p>';
+                        }
+                        ?>
                     </div>
                 </div>
             </div>
